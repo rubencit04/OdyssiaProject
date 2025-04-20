@@ -1,5 +1,7 @@
 package com.example.odyssiaproject.adaptador;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Promociones;
 import com.example.odyssiaproject.negocio.GestorPromociones;
@@ -82,33 +85,34 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
         p = listaPromociones.get(position);
 
         if (p == null) {
-            // Manejo de error: Si la promoción es nula, se muestra una imagen por defecto o un placeholder.
-            holder.imagenPromocion.setImageResource(R.drawable.imgpromotion);
-            return; // Se detiene la ejecución para evitar NullPointerException.
+            Glide.with(holder.itemView.getContext())
+                    .load(R.drawable.imgpromotion)
+                    .into(holder.imagenPromocion);
+            return;
         }
 
-        // Se crea una instancia de GestorPromociones para obtener la imagen correspondiente a la promoción.
-        GestorPromociones nP = new GestorPromociones();
-        int resultadoImagen = nP.imagenPromocion(p); // Llama al método UNA sola vez.
+        GestorPromociones gestor = new GestorPromociones();
+        String urlImagen = gestor.imagenPromocion(p);
 
-        // Según el resultado obtenido, se asigna la imagen adecuada al ImageButton.
-        if (resultadoImagen == 1) {
-            holder.imagenPromocion.setImageResource(R.drawable.imgpromotion2);
-        } else if (resultadoImagen == 2) {
-            holder.imagenPromocion.setImageResource(R.drawable.imgpromotion);
-        } else {
-            // Opcional: Imagen por defecto si no coincide con ningún caso.
-            holder.imagenPromocion.setImageResource(R.drawable.imgpromotion);
-        }
+        Glide.with(holder.itemView.getContext())
+                .load(urlImagen)
+                .placeholder(R.drawable.imgpromotion) // Imagen temporal mientras carga
+                .error(R.drawable.imgpromotion)       // Imagen si hay error
+                .into(holder.imagenPromocion);
+
+        // Click para abrir el enlace de la promoción
+        holder.imagenPromocion.setOnClickListener(v -> {
+            String url = p.getLink();
+            if (url != null && !url.isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
-    /**
-     * Devuelve el número total de elementos en la lista.
-     *
-     * @return Tamaño de la lista de promociones.
-     */
     @Override
     public int getItemCount() {
         return listaPromociones.size();
     }
-}
+    }
+

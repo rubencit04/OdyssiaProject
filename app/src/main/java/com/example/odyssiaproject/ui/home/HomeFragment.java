@@ -18,6 +18,7 @@ import com.example.odyssiaproject.adaptador.AdaptadorPaises;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.entidad.Promociones;
+import com.example.odyssiaproject.persistencia.DaoPromociones;
 import com.example.odyssiaproject.persistencia.api.ApiService;
 import com.example.odyssiaproject.persistencia.api.RetrofitClient;
 import com.example.odyssiaproject.singelton.ListaPromocionesSingelton;
@@ -62,6 +63,8 @@ public class HomeFragment extends Fragment {
 
     // Instancia de la API de Retrofit para comunicarse con Firestore (no se usa en este fragmento, pero se inicializa).
     private ApiService apiService;
+
+    DaoPromociones dao = new DaoPromociones();
 
     /**
      * Runnable encargado de realizar el scroll automático del RecyclerView de promociones.
@@ -117,29 +120,30 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        // Configura el RecyclerView de Promociones.
         recyclerViewPromociones = root.findViewById(R.id.rwPromotions);
         recyclerViewPromociones.setHasFixedSize(true);
         recyclerViewPromociones.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        // Obtiene la lista de promociones desde el Singleton.
-        List<Promociones> listaPromociones = ListaPromocionesSingelton.getInstance().getListaPromociones();
-        if (listaPromociones == null) {
-            // Evita posibles null pointer si la lista es nula.
-            listaPromociones = new ArrayList<>();
-        }
-
-        // Asigna el adaptador para el RecyclerView de promociones.
-        adaptadorPromociones = new AdaptadorPromociones(listaPromociones);
+// Inicializa el adaptador de promociones con una lista vacía inicialmente
+        adaptadorPromociones = new AdaptadorPromociones(new ArrayList<>());
         recyclerViewPromociones.setAdapter(adaptadorPromociones);
 
-        // Verifica si la lista de promociones contiene elementos antes de asignar el adaptador.
-        if (listaPromociones != null && !listaPromociones.isEmpty()) {
-            adaptadorPromociones = new AdaptadorPromociones(listaPromociones);
-            recyclerViewPromociones.setAdapter(adaptadorPromociones);
-        } else {
-            Log.d("HomeFragment", "Lista de promociones está vacía.");
-        }
+// Cargar las promociones desde Firestore
+        dao.obtenerPromocionesAleatorias(new DaoPromociones.PromocionCallback() {
+            @Override
+            public void onPromocionesCargadas(List<Promociones> promociones) {
+                // Aquí tienes la lista de promociones aleatorias
+                // Puedes asignarlas a tu adaptador para mostrarlas en un RecyclerView
+                adaptadorPromociones = new AdaptadorPromociones(promociones);
+                recyclerViewPromociones.setAdapter(adaptadorPromociones);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // Aquí puedes manejar el error, por ejemplo, mostrando un mensaje de error
+                Log.e("HomeFragment", "Error cargando promociones", e);
+            }
+        });
 
         // Inicia el scroll automático del RecyclerView de promociones tras 1 segundo.
         handler.postDelayed(scrollRunnable, 1000);
