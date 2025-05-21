@@ -46,19 +46,12 @@ public class GestorUsuario {
      * @param listener Callback para manejar éxito o fracaso.
      */
     public void registrar(Usuario usuario, final OnRegistroListener listener) {
-        if (usuario.getNombre().isEmpty() ||
-                usuario.getApellido().isEmpty() ||
+        if (usuario.getUsuario().isEmpty() ||
                 usuario.getCorreo().isEmpty() ||
                 usuario.getContrasenia().isEmpty()) {
             listener.onFailure(new Exception("Campos obligatorios vacíos"));
             return;
         }
-
-        if (!usuario.getFechaNacimiento().matches("\\d{2}/\\d{2}/\\d{4}")) {
-            listener.onFailure(new Exception("Formato de fecha inválido. Debe ser dd/MM/yyyy"));
-            return;
-        }
-
         usuarioDao.registrarUsuario(usuario, new DaoUsuario.OnRegistroListener() {
             @Override
             public void onSuccess(FirebaseUser user) {

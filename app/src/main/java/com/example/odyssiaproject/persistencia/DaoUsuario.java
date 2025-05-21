@@ -97,13 +97,11 @@ public class DaoUsuario {
         String uid = firebaseUser.getUid();
         Map<String, Object> userData = new HashMap<>();
         userData.put("uid", uid);
+        userData.put("usuario",usuario.getUsuario());
         userData.put("contrasenia", usuario.getContrasenia());
-        userData.put("nombre", usuario.getNombre());
-        userData.put("apellido", usuario.getApellido());
-        userData.put("fechaNacimiento", usuario.getFechaNacimiento());
         userData.put("nacionalidad", usuario.getNacionalidad());
         userData.put("correo", usuario.getCorreo());
-        userData.put("sexo", usuario.getSexo().toString());
+        userData.put("tema", usuario.getTema());
 
         db.collection("usuario").document(uid).set(userData)
                 .addOnSuccessListener(unused -> {

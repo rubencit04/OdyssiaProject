@@ -1,24 +1,36 @@
 package com.example.odyssiaproject.entidad;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
    private int id;
-   private String nombre, apellido, fechaNacimiento,nacionalidad, contrasenia, correo;
-   private Sexo sexo;
+   private String usuario,nacionalidad, contrasenia, correo;
 
-   public Usuario(int id, String nombre, String apellido, String fechaNacimiento, String nacionalidad, String contrasenia, String correo, Sexo sexo) {
+   private List<Ciudad> favoritosCiudades;
+
+   private List<Actividad> favoritosActividades;
+
+   private Boolean tema;
+
+   public Usuario(int id, Boolean tema, String usuario, String nacionalidad, String contrasenia, String correo, List<Ciudad> favoritosCiudades, List<Actividad> favoritosActividades) {
       this.id = id;
-      this.nombre = nombre;
-      this.apellido = apellido;
-      this.fechaNacimiento = fechaNacimiento;
+      this.tema = tema;
+      this.usuario = usuario;
       this.nacionalidad = nacionalidad;
       this.contrasenia = contrasenia;
       this.correo = correo;
-      this.sexo = sexo;
+      this.favoritosCiudades = favoritosCiudades;
+      this.favoritosActividades = favoritosActividades;
    }
 
    public Usuario(String correo, String contrasenia) {
       this.contrasenia = contrasenia;
       this.correo = correo;
+   }
+
+   public Usuario() {
+
    }
 
    public int getId() {
@@ -29,20 +41,12 @@ public class Usuario {
       this.id = id;
    }
 
-   public String getNombre() {
-      return nombre;
+   public String getUsuario() {
+      return usuario;
    }
 
-   public void setNombre(String nombre) {
-      this.nombre = nombre;
-   }
-
-   public String getFechaNacimiento() {
-      return fechaNacimiento;
-   }
-
-   public void setFechaNacimiento(String fechaNacimiento) {
-      this.fechaNacimiento = fechaNacimiento;
+   public void setUsuario(String usuario) {
+      this.usuario = usuario;
    }
 
    public String getContrasenia() {
@@ -61,13 +65,6 @@ public class Usuario {
       this.correo = correo;
    }
 
-   public Sexo getSexo() {
-      return sexo;
-   }
-
-   public void setSexo(Sexo sexo) {
-      this.sexo = sexo;
-   }
 
    public String getNacionalidad() {
       return nacionalidad;
@@ -77,25 +74,41 @@ public class Usuario {
       this.nacionalidad = nacionalidad;
    }
 
-   public String getApellido() {
-      return apellido;
+   public List<Ciudad> getFavoritosCiudades() {
+      return favoritosCiudades;
    }
 
-   public void setApellido(String apellido) {
-      this.apellido = apellido;
+   public void setFavoritosCiudades(List<Ciudad> favoritosCiudades) {
+      this.favoritosCiudades = favoritosCiudades;
+   }
+
+   public List<Actividad> getFavoritosActividades() {
+      return favoritosActividades;
+   }
+
+   public void setFavoritosActividades(List<Actividad> favoritosActividades) {
+      this.favoritosActividades = favoritosActividades;
+   }
+
+   public Boolean getTema() {
+      return tema;
+   }
+
+   public void setTema(Boolean tema) {
+      this.tema = tema;
    }
 
    @Override
    public String toString() {
       return "Usuario{" +
               "id=" + id +
-              ", nombre='" + nombre + '\'' +
-              ", apellido='" + apellido + '\'' +
-              ", fechaNacimiento='" + fechaNacimiento + '\'' +
+              ", usuario='" + usuario + '\'' +
               ", nacionalidad='" + nacionalidad + '\'' +
-              ", contraseña='" + contrasenia + '\'' +
+              ", contrasenia='" + contrasenia + '\'' +
               ", correo='" + correo + '\'' +
-              ", sexo=" + sexo +
+              ", favoritosCiudades=" + favoritosCiudades +
+              ", favoritosActividades=" + favoritosActividades +
+              ", tema=" + tema +
               '}';
    }
 }
