@@ -11,7 +11,7 @@ import android.content.Intent;
 
 import com.example.odyssiaproject.negocio.GestorUsuario;
 
-public class RecoverPassActivity extends AppCompatActivity {
+public class    RecoverPassActivity extends AppCompatActivity {
 
     private EditText etEmail;
     private ImageButton btnRecuperar;
