@@ -1,7 +1,6 @@
 package com.example.odyssiaproject.ui.option;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.odyssiaproject.R;
-import com.example.odyssiaproject.adaptador.AdaptadorCiudades;
 import com.example.odyssiaproject.adaptador.AdaptadorMonumentos;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.entidad.Monumentos;
-import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.entidad.Promociones;
-import com.example.odyssiaproject.negocio.GestorMonumentos;
+import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
 import com.example.odyssiaproject.singelton.ListaMonumentosSingelton;
 import com.example.odyssiaproject.singelton.ListaPromocionesSingelton;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,29 +35,47 @@ public class OptionFragment extends Fragment {
 
     private RecyclerView recyclerViewPromociones;
     private RecyclerView recyclerViewMonumentos;
+    // Adaptador de promociones (USA TU ADAPTADOR ORIGINAL sin modificaciones para scroll infinito)
     private AdaptadorPromociones adaptadorPromociones;
     private AdaptadorMonumentos adaptadorMonumentos;
-    private Handler handler = new Handler();
-    private int scrollSpeed = 10;
+
+    // --- INSTANCIA DE LA CLASE BÁSICA DEL SCROLL AUTOMÁTICO ---
+    private PromocionesAutoScroller controladorScrollPromociones;
+
+    // --- Parámetros para la panorámica continua (AJUSTA ESTOS VALORES si quieres que vayan distinto) ---
+    private static final int VELOCIDAD_SCROLL_PX_BASICO = 10; // Pixeles por paso
+    private static final long RETRASO_PASO_SCROLL_MS_BASICO = 50; // Retraso entre pasos
+
+    // Variables para la ciudad (AHORA se obtendrá de getArguments() y se guardará aquí si es necesario)
     private Ciudad ciudad;
-    private String ciu;
-    public OptionFragment(String ciudad){
-        this.ciu = ciudad;
+    private String nombreCiudad;
+
+    public OptionFragment() {
 
     }
 
-    private final Runnable scrollRunnable = new Runnable() {
-        @Override
-        public void run() {
-            recyclerViewPromociones.smoothScrollBy(scrollSpeed, 0);
-            if (!recyclerViewPromociones.canScrollHorizontally(1)) {
-                recyclerViewPromociones.scrollToPosition(0);
-            }
-            handler.postDelayed(this, 50);
-        }
-    };
+    public static OptionFragment newInstance(String nombreCiudad) {
+        OptionFragment fragment = new OptionFragment();
+        Bundle args = new Bundle(); // 2. Crear un Bundle
+        args.putString("nombreCiudadKey", nombreCiudad);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-    // Método de fábrica para crear una nueva instancia pasando el nombre de la ciudad
+
+    // --- Método onCreate (El lugar RECOMENDADO para RECUPERAR los argumentos) ---
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // --- RECUPERAR el dato de los argumentos ---
+        if (getArguments() != null) {
+            nombreCiudad = getArguments().getString("nombreCiudadKey");
+            Log.d("OptionFragment", "Ciudad recuperada (desde args) en onCreate: " + nombreCiudad);
+        } else {
+            Log.e("OptionFragment", "Error: Fragment creado sin argumentos. nombreCiudad es null.");
+        }
+    }
+
 
     @Nullable
     @Override
@@ -67,7 +83,6 @@ public class OptionFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_option, container, false);
 
-        // Configuración del encabezado del NavigationView para mostrar el correo del usuario
         DrawerLayout drawerLayout = getActivity().findViewById(R.id.navBarDrawer);
         NavigationView navigationView = drawerLayout.findViewById(R.id.navBarView);
         if (navigationView != null) {
@@ -82,48 +97,84 @@ public class OptionFragment extends Fragment {
             }
         }
 
-        // Configurar RecyclerView de Promociones (horizontal)
         recyclerViewPromociones = root.findViewById(R.id.rwPromotions);
         recyclerViewPromociones.setHasFixedSize(true);
-        recyclerViewPromociones.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager promocionesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
 
         List<Promociones> listaPromociones = ListaPromocionesSingelton.getInstance().getListaPromociones();
         if (listaPromociones == null) {
             listaPromociones = new ArrayList<>();
         }
+
         adaptadorPromociones = new AdaptadorPromociones(listaPromociones);
         recyclerViewPromociones.setAdapter(adaptadorPromociones);
 
-        handler.postDelayed(scrollRunnable, 1000);
+        controladorScrollPromociones = new PromocionesAutoScroller(
+                recyclerViewPromociones,
+                VELOCIDAD_SCROLL_PX_BASICO,
+                RETRASO_PASO_SCROLL_MS_BASICO
+        );
 
-        // Configurar RecyclerView de Monumentos (vertical)
+        if (!listaPromociones.isEmpty()) {
+            controladorScrollPromociones.iniciarScroll();
+        } else {
+            Log.w("OptionFragment", "Lista de promociones del Singleton está vacía. No se inicia el scroll automático.");
+        }
+
         recyclerViewMonumentos = root.findViewById(R.id.rwOptions);
         recyclerViewMonumentos.setHasFixedSize(true);
         recyclerViewMonumentos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-
-
-
-
-        // Recuperar el nombre de la ciudad enviado como argumento y filtrar los monumentos
-        if (ciu!= null) {
-            List<Monumentos> listaMonumentos = ListaMonumentosSingelton.getInstance().obtenerMonumentosPorCiudad(ciu);
+        if (nombreCiudad != null) {
+            List<Monumentos> listaMonumentos = ListaMonumentosSingelton.getInstance().obtenerMonumentosPorCiudad(nombreCiudad);
             if (listaMonumentos == null) {
                 listaMonumentos = new ArrayList<>();
             }
-            if (ciu != null) {
-                ciudad = new Ciudad();
-                ciudad.setNombre(ciu);
-                Log.d("OptionFragment", "Ciudad recibida: " + ciu);
-                adaptadorMonumentos = new AdaptadorMonumentos(listaMonumentos);
-                recyclerViewMonumentos.setAdapter(adaptadorMonumentos);
-            } else {
-            Log.e("OptionFragment", "El argumento 'ciudad' es null");
-            }
-        }else{
-            Log.e("OptionFragment", "No se recibieron argumentos");
+            ciudad = new Ciudad();
+            ciudad.setNombre(nombreCiudad);
+            Log.d("OptionFragment", "Monumentos para ciudad: " + nombreCiudad);
+
+            adaptadorMonumentos = new AdaptadorMonumentos(listaMonumentos);
+            recyclerViewMonumentos.setAdapter(adaptadorMonumentos);
+
+        } else {
+            Log.e("OptionFragment", "El nombre de la ciudad no se pudo recuperar de los argumentos.");
         }
+
 
         return root;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (controladorScrollPromociones != null) {
+            controladorScrollPromociones.detenerScroll();
+        }
+        recyclerViewPromociones = null;
+        adaptadorPromociones = null;
+        controladorScrollPromociones = null;
+        recyclerViewMonumentos = null;
+        adaptadorMonumentos = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (controladorScrollPromociones != null) {
+            // Si la clase PromocionesAutoScrollerBasico tiene métodos reanudarScroll()
+            // controladorScrollPromocionesBasico.reanudarScroll(); // Debes añadir estos métodos en la clase básica si los necesitas
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+         if (controladorScrollPromociones != null) {
+            // Si la clase PromocionesAutoScrollerBasico tiene métodos pausarScroll()
+            // controladorScrollPromocionesBasico.pausarScroll(); // O detenerScroll() si solo quieres parar
+         }
+    }
+
 }

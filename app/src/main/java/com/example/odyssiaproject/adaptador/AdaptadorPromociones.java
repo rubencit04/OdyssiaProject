@@ -2,6 +2,7 @@ package com.example.odyssiaproject.adaptador;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Promociones;
 import com.example.odyssiaproject.negocio.GestorPromociones;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,38 +83,72 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
      */
     @Override
     public void onBindViewHolder(@NonNull AdaptadorPromociones.ViewHolder holder, int position) {
-        // Se obtiene la promoción correspondiente a la posición actual.
-        p = listaPromociones.get(position);
+        Log.d("AdaptadorPromoLog", "onBindViewHolder START: Pos " + position + ", Tiempo: " + System.currentTimeMillis()); // <-- Añade esta línea al inicio
+        if (listaPromociones != null && !listaPromociones.isEmpty()) {
+            int realPosition = position % listaPromociones.size();
+            Promociones p = listaPromociones.get(realPosition);
+            if (p == null) {
+                Glide.with(holder.itemView.getContext())
+                        .load(R.drawable.imgpromotion)
+                        .into(holder.imagenPromocion);
+                holder.imagenPromocion.setOnClickListener(null);
+                Log.w("AdaptadorPromociones", "Promocion nula en la posicion real: " + realPosition);
+                return; // Salir del método si la promo es null
+            }
 
-        if (p == null) {
+            GestorPromociones gestor = new GestorPromociones();
+            String urlImagen = gestor.imagenPromocion(p);
+
+            Glide.with(holder.itemView.getContext())
+                    .load(urlImagen)
+                    .placeholder(R.drawable.imgpromotion)
+                    .error(R.drawable.imgpromotion)
+                    .into(holder.imagenPromocion);
+
+            holder.imagenPromocion.setOnClickListener(v -> {
+                String url = p.getLink();
+                if (url != null && !url.isEmpty()) {
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        url = "http://" + url;
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    if (intent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                        v.getContext().startActivity(intent);
+                    } else {
+                        Log.w("AdaptadorPromociones", "No hay app para manejar el enlace: " + url);
+                    }
+                } else {
+                    Log.w("AdaptadorPromociones", "Enlace nulo o vacío para la promocion: " + p.getNombre());
+                }
+            });
+
+        } else {
             Glide.with(holder.itemView.getContext())
                     .load(R.drawable.imgpromotion)
                     .into(holder.imagenPromocion);
-            return;
+            holder.imagenPromocion.setOnClickListener(null);
+            Log.d("AdaptadorPromoLog", "onBindViewHolder END (Lista Vacía/Inválida): Pos " + position + ", Tiempo: " + System.currentTimeMillis()); // <-- Añade esta línea al final de la rama else
+
         }
-
-        GestorPromociones gestor = new GestorPromociones();
-        String urlImagen = gestor.imagenPromocion(p);
-
-        Glide.with(holder.itemView.getContext())
-                .load(urlImagen)
-                .placeholder(R.drawable.imgpromotion) // Imagen temporal mientras carga
-                .error(R.drawable.imgpromotion)       // Imagen si hay error
-                .into(holder.imagenPromocion);
-
-        // Click para abrir el enlace de la promoción
-        holder.imagenPromocion.setOnClickListener(v -> {
-            String url = p.getLink();
-            if (url != null && !url.isEmpty()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                v.getContext().startActivity(intent);
-            }
-        });
     }
-
+    /**
+     * Actualiza la lista de datos del adaptador con las promociones cargadas de forma asíncrona.
+     * <p>
+     * Este método reemplaza la lista interna del adaptador.
+     *
+     * @param nuevasPromociones La nueva lista de objetos Promociones (puede ser null).
+     */
+    public void actualizarDatos(List<Promociones> nuevasPromociones) {
+        if (nuevasPromociones != null) {
+            this.listaPromociones = nuevasPromociones;
+        } else {
+            this.listaPromociones = new ArrayList<>();
+        }
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
-        return listaPromociones.size();
+        return Integer.MAX_VALUE;
     }
     }
 

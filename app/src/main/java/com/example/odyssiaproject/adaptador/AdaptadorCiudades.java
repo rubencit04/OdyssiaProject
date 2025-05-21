@@ -101,19 +101,19 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
             int pos = holder.getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
                 Ciudad ciudadClick = listaCiudades.get(pos);
-                // Crea el fragmento CityFragment con el nombre de la ciudad (aunque luego se utiliza OptionFragment).
-                CityFragment cityFragment = CityFragment.newInstance(ciudadClick.getNombre());
 
-                // Obtiene el Activity de forma segura a partir del contexto.
                 Context context = v.getContext();
                 while (!(context instanceof AppCompatActivity) && context instanceof ContextWrapper) {
                     context = ((ContextWrapper) context).getBaseContext();
                 }
                 AppCompatActivity activity = (AppCompatActivity) context;
 
-                // Realiza la transacción de fragmentos, reemplazando el contenedor actual con OptionFragment.
+
+                OptionFragment optionFragment = OptionFragment.newInstance(ciudadClick.getNombre());
+
+
                 activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new OptionFragment(ciudadClick.getNombre()))
+                        .replace(R.id.fragment_container, optionFragment)
                         .addToBackStack(null)
                         .commit();
             }
