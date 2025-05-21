@@ -4,17 +4,37 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
         <item
-            android:id="@+id/navInicio"
-            android:icon="@drawable/iconhome"
-            android:title="Inicio" />
+            android:id="@+id/athyssia"
+            android:title="@string/v2_athyssia">
+        </item>
+
         <item
-            android:id="@+id/navFavoritos"
-            android:icon="@drawable/icongalleryfavs"
-            android:title="Favoritos" />
+            android:id="@+id/favs"
+            android:title="@string/v2_fav">
+        </item>
+
         <item
-            android:id="@+id/navConfiguracion"
-            android:icon="@drawable/iconconfiguration"
-            android:title="Ajustes" />
+            android:id="@+id/swipeGo"
+            android:title="@string/v2_swipeGo">
+        </item>
+
+        <item
+            android:id="@+id/miOdyssia"
+            android:title="@string/v2_myOdyssia">
+        </item>
+
+        <item
+            android:id="@+id/ajustes"
+            android:title="@string/v2_ajustes">
+        </item>
+
+        <item
+            android:id="@+id/marketplace"
+            android:title="@string/v2_marketplace">
+        </item>
+
     </group>
+
 </menu>

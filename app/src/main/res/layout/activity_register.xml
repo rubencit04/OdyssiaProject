@@ -2,78 +2,107 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/registerPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/odyssiaregisterpage"
-    tools:context=".Registro1Activity">
+    android:id="@+id/Registro"
+    android:background="@drawable/v2_register_background">
 
+    <!-- CardView contenedor -->
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        app:cardBackgroundColor="@color/white"
+        android:id="@+id/cvRegistro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="8dp"
+        android:layout_margin="24dp"
+        app:cardBackgroundColor="#E6FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:padding="24dp">
 
-            <!-- ProgressBar Lineal -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="300dp"
-                android:layout_height="10dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/custom_progressbar" />
+            <!-- Título -->
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:text="@string/v2_tituloRegister"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:textColor="#5294FF"
+                android:textSize="30sp" />
 
-            <!-- Name Field -->
+            <!-- Campo Usuario -->
             <EditText
-                android:id="@+id/etNombre"
-                android:layout_width="350dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/textname"
-                android:hint="Nombre"
-                android:inputType="text"
-                android:paddingLeft="50dp"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:id="@+id/etUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/v2_usuario"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:padding="16dp"
+                android:background="@drawable/edittext"
+                android:layout_marginBottom="16dp" />
 
-            <!-- Surname Field -->
+            <!-- Campo E-mail -->
             <EditText
-                android:id="@+id/etApellido"
-                android:layout_width="350dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/textsurname"
-                android:hint="Apellidos"
-                android:inputType="text"
-                android:paddingLeft="50dp"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/v2_email"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:inputType="textEmailAddress"
+                android:padding="16dp"
+                android:background="@drawable/edittext"
+                android:layout_marginBottom="16dp" />
 
-            <!-- Continue Button -->
-            <ImageButton
+            <!-- Campo Contraseña -->
+            <EditText
+                android:id="@+id/etContrasenia"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/v2_contrasenia"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:inputType="textPassword"
+                android:padding="16dp"
+                android:background="@drawable/edittext"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Campo Contraseña -->
+            <EditText
+                android:id="@+id/etNacionalidad"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/v2_nacionalidad"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:padding="16dp"
+                android:background="@drawable/edittext"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Botón Iniciar -->
+            <Button
                 android:id="@+id/btnContinuar"
-                android:layout_width="168dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/buttoncontinue"
-                android:contentDescription="boton continuar" />
-
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/button_bluegradient"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:text="@string/v2_btnContinuar"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:backgroundTint="@null" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

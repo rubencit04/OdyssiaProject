@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loadingPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/odyssialoadingpage"
-    tools:context=".LoadingPage">
+    android:background="@drawable/v2_loading_background"
+    android:id="@+id/Loading">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="400dp"
-        android:backgroundTint="@color/white"
+        android:layout_height="320dp"
+        android:background="@drawable/cardview_loading"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+        <!-- Logo centrado -->
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="105dp"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/v2_odyssia_icon" />
 
-            <ImageView
-                android:id="@+id/odyssiaLogo"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/odyssialogo" />
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:text="@string/v2_slogan"
+            android:fontFamily="@font/antic"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="18sp"/>
 
-            <ImageView
-                android:id="@+id/odyssiaSlogan"
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="20dp"
-                android:src="@drawable/odyssiaslogan" />
+        <!-- Subtítulo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/v2_sloganDescription"
+            android:fontFamily="@font/antic"
+            android:textStyle="bold"
+            android:textColor="#5294FF"
+            android:textSize="14sp" />
+    </LinearLayout>
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

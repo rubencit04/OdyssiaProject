@@ -1,58 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/recoverPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/odyssiarecoverpage"
-    tools:context=".RecoverPassActivity">
+    android:id="@+id/RecuperacionContrasenia"
+    android:background="@drawable/v2_recoverpass_background">
 
+    <!-- CardView contenedor -->
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="380dp"
-        app:cardBackgroundColor="@color/white"
+        android:id="@+id/cvRecuperar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="8dp"
+        android:layout_margin="24dp"
+        app:cardBackgroundColor="#E6FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:padding="24dp">
 
-            <ImageView
-                android:id="@+id/odyssiaRecoverText"
-                android:layout_width="334dp"
-                android:layout_height="170dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/odyssiarecovertext" />
+            <!-- Título -->
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/v2_tituloRecover"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="#5294FF"
+                android:textSize="30sp"
+                android:layout_marginBottom="40dp" />
 
+            <!-- Iniciar con redes -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/v2_recoverDescription"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="#AAAAAA"
+                android:layout_marginBottom="20dp"/>
+
+            <!-- Campo E-mail -->
             <EditText
                 android:id="@+id/etEmail"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/textemail"
-                android:hint="E-mail"
+                android:hint="@string/v2_email"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
                 android:inputType="textEmailAddress"
-                android:paddingLeft="50dp"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:padding="16dp"
+                android:background="@drawable/edittext"
+                android:layout_marginBottom="60dp" />
 
-            <ImageButton
-                android:id="@+id/btnMandar"
-                android:layout_width="168dp"
-                android:layout_height="49dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/buttonrecover"
-                android:contentDescription="boton para recuperar contraseña" />
+            <!-- Botón Iniciar -->
+            <Button
+                android:id="@+id/btnEnviar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/v2_btnEnviar"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                app:backgroundTint="@null"
+                android:background="@drawable/button_bluegradient"
+                android:layout_marginBottom="16dp" />
 
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-

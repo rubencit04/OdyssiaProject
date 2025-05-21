@@ -27,15 +27,6 @@
             android:name=".Registro1Activity"
             android:exported="false" />
         <activity
-            android:name=".Registro2Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Registro3Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Registro4Activity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity android:name=".CityActivity"
