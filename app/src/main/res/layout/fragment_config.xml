@@ -3,78 +3,142 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@drawable/v2_config_background">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- CardView contenedor -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvRegistro"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="8dp"
+        android:layout_margin="24dp"
+        app:cardBackgroundColor="#E6FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_gravity="center"
-            android:src="@drawable/odyssialogo" />
-
-        <ImageButton
-            android:id="@+id/btnPefil"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/buttonperfil"
-            android:contentDescription="boton de perfil" />
-
-        <ImageButton
-            android:id="@+id/btnCambioPass"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/buttonchangepassword"
-            android:contentDescription="boton de cambio contraseña" />
-
-        <Switch
-            android:id="@+id/switchNotifications"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:textColor="#51A1FF"
-            android:textSize="20dp"
-            android:text="Notificaciones"
-            android:trackTint="#51A1FF"
-            android:thumbTint="#2979FF"
-            android:height="50dp"/>
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="24dp">
 
-        <ImageButton
-            android:id="@+id/btnAcercaDe"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/buttonacercade"
-            android:contentDescription="Boton de Acerca de Odyssia" />
+            <!-- Título -->
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:text="@string/v2_ajustes"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:textColor="#5294FF"
+                android:textSize="30sp" />
 
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:textSize="20dp"
-            android:text="Cerrar sesión"
-            android:backgroundTint="@android:color/transparent"
-            android:textColor="@android:color/holo_red_dark" />
+            <!-- Boton Perfil -->
+            <Button
+                android:id="@+id/btnPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/antic"
+                android:text="@string/v2_btnPerfil"
+                android:textColor="#5294FF"
+                android:textSize="20sp"
+                app:backgroundTint="@color/white" />
 
-        <Button
-            android:id="@+id/btnEliminarCuenta"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="20dp"
-            android:text="Eliminar cuenta"
-            android:backgroundTint="@android:color/transparent"
-            android:textColor="@android:color/holo_red_dark" />
-    </LinearLayout>
+            <!-- Boton Cambio Contraseña -->
+            <Button
+                android:id="@+id/btnCambioPass"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/antic"
+                android:text="@string/v2_btnCambioPass"
+                android:textColor="#5294FF"
+                android:textSize="20sp"
+                app:backgroundTint="@color/white" />
+
+            <!-- Campo Notificaciones -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@drawable/edittext"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/v2_btnNotificaciones"
+                    android:textColor="#5294FF"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/antic"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="15dp"/>
+
+                <Switch
+                    android:id="@+id/swTema"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="130dp" />
+
+            </LinearLayout>
+
+            <!-- Boton Acerca de -->
+            <Button
+                android:id="@+id/btnAcercaDe"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/antic"
+                android:text="@string/v2_btnAcercaDe"
+                android:textColor="#5294FF"
+                android:textSize="20sp"
+                app:backgroundTint="@color/white" />
+
+            <!-- Botón Iniciar -->
+            <Button
+                android:id="@+id/btnContinuar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/button_bluegradient"
+                android:fontFamily="@font/antic"
+                android:textStyle="bold"
+                android:text="@string/v2_btnContinuar"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:backgroundTint="@null" />
+
+            <!-- Boton LogOut -->
+            <Button
+                android:id="@+id/btnLogOut"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/antic"
+                android:text="@string/v2_btnLogOut"
+                android:textColor="#FF5252"
+                android:textSize="20sp"
+                app:backgroundTint="@color/white" />
+
+            <!-- Boton Eliminar -->
+            <Button
+                android:id="@+id/btnEliminar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/antic"
+                android:text="@string/v2_btnEliminar"
+                android:textColor="#FF5252"
+                android:textSize="20sp"
+                app:backgroundTint="@color/white" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

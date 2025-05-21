@@ -16,4 +16,43 @@
     <string name="sortA_Z">Ordenar de A-Z</string>
     <string name="sortZ_A">Ordenar de Z-A</string>
     <string name="sortPopularidad">Ordenar por Popularidad</string>
+
+    <!-- Loading -->
+    <string name="v2_slogan">Conecta, explora y transofroma tu mirada</string>
+    <string name="v2_sloganDescription">Amplia tu perspectiva, enriquecete con el conocimiento y\nlleva contigo historias que cambiarán\ntu forma de entender Europa.</string>
+
+    <!-- Login -->
+    <string name="v2_tituloLogin">Inicio de Sesión</string>
+    <string name="v2_email">E-mail</string>
+    <string name="v2_contrasenia">Contraseña</string>
+    <string name="v2_btnRecover">Recuperar Contraseña</string>
+    <string name="v2_btnRegister">Registro</string>
+    <string name="v2_btnInicio">Iniciar</string>
+
+    <!-- Recover Pass -->
+    <string name="v2_tituloRecover">Recuperación de Contraseña</string>
+    <string name="v2_recoverDescription">¡Pronto recibirá un correo con las\ninstrucciones para cambiar su contraseña!\nEste proceso tomará solo unos segundos.</string>
+    <string name="v2_btnEnviar">Enviar</string>
+
+    <!-- Registro -->
+    <string name="v2_tituloRegister">Registro</string>
+    <string name="v2_usuario">Usuario</string>
+    <string name="v2_nacionalidad">Nacionalidad</string>
+    <string name="v2_btnContinuar">Continuar</string>
+
+    <!-- Fragmentos -->
+    <string name="v2_search">Buscar ...</string>
+    <string name="v2_myOdyssia">Mi Odyssia</string>
+    <string name="v2_fav">Favoritos</string>
+    <string name="v2_athyssia">Athyssia</string>
+    <string name="v2_swipeGo">Swipe and Go</string>
+    <string name="v2_ajustes">Ajustes</string>
+    <string name="v2_marketplace">Marketplace</string>
+    <string name="v2_btnPerfil">Perfil</string>
+    <string name="v2_btnCambioPass">Cambiar Contraseña</string>
+    <string name="v2_btnNotificaciones">Notificaciones</string>
+    <string name="v2_btnAcercaDe">Acerca de Odyssia</string>
+    <string name="v2_btnLogOut">Cerrar Sesión</string>
+    <string name="v2_btnEliminar">Eliminar Cuenta</string>
+
 </resources>
