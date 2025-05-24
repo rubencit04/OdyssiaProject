@@ -2,14 +2,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/optionPage"
+    android:id="@+id/explorationPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.option.OptionFragment">
-
-    <!-- Top menu: Se incluye la custom_toolbar.xml -->
-
+    tools:context=".ui.exploration.ExplorationFragment">
 
     <!-- RecyclerView Promotions -->
     <androidx.recyclerview.widget.RecyclerView
@@ -37,15 +34,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rwPromotions" />
 
-        <!-- RecyclerView Opciones -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rwOptions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSortBy"
-            tools:listitem="@layout/item_options" />
+    <!-- RecyclerView Exploration -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rwExploration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSortBy"
+        tools:listitem="@layout/item_exploration" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

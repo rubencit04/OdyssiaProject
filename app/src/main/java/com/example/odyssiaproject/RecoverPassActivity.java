@@ -14,7 +14,7 @@ import com.example.odyssiaproject.negocio.GestorUsuario;
 public class    RecoverPassActivity extends AppCompatActivity {
 
     private EditText etEmail;
-    private ImageButton btnRecuperar;
+    private Button btnRecuperar;
     private GestorUsuario gestorUsuario;
 
     @Override
@@ -23,7 +23,7 @@ public class    RecoverPassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recover_pass);
 
         etEmail = findViewById(R.id.etEmail);
-        btnRecuperar = findViewById(R.id.btnMandar);
+        btnRecuperar = findViewById(R.id.btnEnviar);
         gestorUsuario = new GestorUsuario();
 
         btnRecuperar.setOnClickListener(view -> {

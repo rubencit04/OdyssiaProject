@@ -72,7 +72,6 @@ public class AdaptadorMonumentos extends RecyclerView.Adapter<AdaptadorMonumento
             holder.imagenMonumento.setImageResource(R.drawable.imgpromotion);
             holder.tvNamePlace.setText("Nombre no disponible");
             holder.tvPricePlace.setText("Precio no disponible");
-            holder.tvTimePlace.setText("Horario no disponible");
             return;
         }
 
@@ -158,7 +157,6 @@ public class AdaptadorMonumentos extends RecyclerView.Adapter<AdaptadorMonumento
         // Asigna los textos correspondientes al nombre, precio y horario del monumento.
         holder.tvNamePlace.setText(m.getNombre());
         holder.tvPricePlace.setText("Precio: " + m.getPrecio());
-        holder.tvTimePlace.setText("Horario: " + m.getHorario());
 
         // Configura el gesto de doble toque en el botón "like" para cambiar su imagen.
         holder.like.setOnTouchListener(new View.OnTouchListener() {
@@ -195,7 +193,7 @@ public class AdaptadorMonumentos extends RecyclerView.Adapter<AdaptadorMonumento
         // ImageView que muestra la imagen del monumento.
         ImageView imagenMonumento;
         // TextViews para mostrar el nombre, precio y horario del monumento.
-        TextView tvNamePlace, tvPricePlace, tvTimePlace;
+        TextView tvNamePlace, tvPricePlace;
         // ImageButton que actúa como botón "like".
         ImageButton like;
         // Botón para abrir más opciones o detalles (su funcionalidad se puede definir según la lógica de la app).
@@ -211,7 +209,6 @@ public class AdaptadorMonumentos extends RecyclerView.Adapter<AdaptadorMonumento
             imagenMonumento = v.findViewById(R.id.iwPlace);
             tvNamePlace = v.findViewById(R.id.tvNamePlace);
             tvPricePlace = v.findViewById(R.id.tvPricePlace);
-            tvTimePlace = v.findViewById(R.id.tvTimePlace);
             like = v.findViewById(R.id.buttonLikePlace);
             abrir = v.findViewById(R.id.buttonOpen);
         }

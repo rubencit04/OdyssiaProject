@@ -29,11 +29,11 @@ public class LogIn extends AppCompatActivity {
         String correoRecibido = preferences.getString("correo", "");
 
         GestorUsuario gestorUsuario = new GestorUsuario();
-        EditText correoUser = findViewById(R.id.etUsuario);
+        EditText correoUser = findViewById(R.id.etEmail);
         EditText pass = findViewById(R.id.etContrasenia);
-        ImageButton buttonRegister = findViewById(R.id.btnRegistro);
-        Button buttonRecover = findViewById(R.id.btnRecuperar);
-        ImageButton buttonNext = findViewById(R.id.btnInicio);
+        Button buttonRegister = findViewById(R.id.btnRegistro);
+        Button buttonRecover = findViewById(R.id.btnRecuperacion);
+        Button buttonNext = findViewById(R.id.btnIniciar);
         correoUser.setText(correoRecibido);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -48,7 +48,7 @@ public class LogIn extends AppCompatActivity {
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LogIn.this, Registro1Activity.class);
+                Intent intent = new Intent(LogIn.this, RegistroActivity.class);
                 startActivity(intent);
             }
         });

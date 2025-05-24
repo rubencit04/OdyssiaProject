@@ -95,14 +95,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d("NAVIGATION", "Item seleccionado: " + item.getItemId());
 
         // Determina qué fragmento cargar en función del ítem seleccionado.
-        if (item.getItemId() == R.id.navInicio) {
-            Log.d("NAVIGATION", "Cargando HomeFragment...");
+        if (item.getItemId() == R.id.athyssia) {
+            Log.d("NAVIGATION", "Cargando AthyssiaFragment...");
             loadFragment(new HomeFragment());
-        } else if (item.getItemId() == R.id.navFavoritos) {
+        } else if (item.getItemId() == R.id.favs) {
             Log.d("NAVIGATION", "Cargando FavsFragment...");
             loadFragment(new FavsFragment());
-        } else if (item.getItemId() == R.id.navConfiguracion) {
+        } else if (item.getItemId() == R.id.swipeGo) {
+            Log.d("NAVIGATION", "Cargando SwipeGoFragment...");
+            loadFragment(new FavsFragment());
+        } else if (item.getItemId() == R.id.miOdyssia) {
+            Log.d("NAVIGATION", "Cargando MiOdyssiaFragment...");
+            loadFragment(new FavsFragment());
+        } else if (item.getItemId() == R.id.ajustes) {
             Log.d("NAVIGATION", "Cargando ConfigFragment...");
+            loadFragment(new ConfigFragment());
+        } else if (item.getItemId() == R.id.marketplace) {
+            Log.d("NAVIGATION", "Cargando MarketplaceFragment...");
             loadFragment(new ConfigFragment());
         }
 

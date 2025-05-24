@@ -36,12 +36,12 @@ public class ConfigFragment extends Fragment {
         configViewModel = new ViewModelProvider(this).get(ConfigViewModel.class);
         mAuth = FirebaseAuth.getInstance();
 
-        ImageButton btnPerfil = root.findViewById(R.id.btnPefil);
-        ImageButton btnCambioPass = root.findViewById(R.id.btnCambioPass);
-        Switch switchNotifications = root.findViewById(R.id.switchNotifications);
+        Button btnPerfil = root.findViewById(R.id.btnPerfil);
+        Button btnCambioPass = root.findViewById(R.id.btnCambioPass);
+        Switch switchNotifications = root.findViewById(R.id.swTema);
         ImageButton btnAcercaDe = root.findViewById(R.id.btnAcercaDe);
-        Button btnLogout = root.findViewById(R.id.btnLogout);
-        Button btnEliminarCuenta = root.findViewById(R.id.btnEliminarCuenta);
+        Button btnLogout = root.findViewById(R.id.btnLogOut);
+        Button btnEliminarCuenta = root.findViewById(R.id.btnEliminar);
 
         // Abrir perfil
         btnPerfil.setOnClickListener(v -> {
