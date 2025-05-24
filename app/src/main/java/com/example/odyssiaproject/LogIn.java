@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +14,7 @@ import com.example.odyssiaproject.entidad.Usuario;
 import com.example.odyssiaproject.negocio.GestorUsuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LogIn extends AppCompatActivity {
 
@@ -40,8 +39,26 @@ public class LogIn extends AppCompatActivity {
         FirebaseUser usuario = mAuth.getCurrentUser();
 
         if (usuario != null) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+            // Oculta la pantalla mientras se verifica
+            findViewById(R.id.Login).setVisibility(View.INVISIBLE);
+
+            // Verifica si el usuario realmente existe en Firestore
+            FirebaseFirestore.getInstance().collection("usuarios")
+                    .document(usuario.getUid())
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult().exists()) {
+                            // El usuario existe en Firestore, continuar a MainActivity
+                            startActivity(new Intent(LogIn.this, MainActivity.class));
+                            finish();
+                        } else {
+                            // El usuario NO existe, forzar signOut y mostrar login
+                            mAuth.signOut();
+                            mostrarLogin();
+                        }
+                    });
+        } else {
+            mostrarLogin();
         }
 
         // Configurar listener para el botón de registro
@@ -53,7 +70,7 @@ public class LogIn extends AppCompatActivity {
             }
         });
 
-        // Configurar listener para el botón de recuperar contraseña
+        // Configurar listener para el botón de recuperación
         buttonRecover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,25 +83,22 @@ public class LogIn extends AppCompatActivity {
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.setLanguageCode("es");
 
                 String correo = correoUser.getText().toString().trim();
                 String contrasenia = pass.getText().toString().trim();
 
-                // Actualizar SharedPreferences con el último correo introducido
+                // Guardar el correo en SharedPreferences
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("correo", correo);
                 editor.apply();
 
-                // Crear objeto Usuario (asegúrate de que el constructor de Usuario coincida)
                 Usuario usuario = new Usuario(correo, contrasenia);
 
                 gestorUsuario.iniciarSesion(usuario, new GestorUsuario.OnLoginListener() {
                     @Override
                     public void onSuccess(FirebaseUser user) {
                         Dialogos.showLoading(LogIn.this, "Iniciando Sesion...");
-                        // Redirigir a la actividad principal
                         startActivity(new Intent(LogIn.this, MainActivity.class));
                         finish();
                     }
@@ -97,15 +111,18 @@ public class LogIn extends AppCompatActivity {
                     private String obtenerMensajeErrorFirebase(Exception exception) {
                         String mensaje = exception.getMessage();
                         if (mensaje.contains("The supplied auth credential is incorrect, malformed or has expired.")) {
-                            return "Usuario o Contraseña invalidos";
+                            return "Usuario o Contraseña inválidos";
                         } else if (mensaje.contains("The email address is badly formatted.")) {
                             return "El correo electrónico tiene un formato inválido";
                         }
                         return mensaje;
                     }
-
                 });
             }
         });
+    }
+
+    private void mostrarLogin() {
+        findViewById(R.id.Login).setVisibility(View.VISIBLE);
     }
 }
