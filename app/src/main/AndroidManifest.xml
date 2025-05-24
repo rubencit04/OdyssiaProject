@@ -19,9 +19,6 @@
         android:theme="@style/Theme.OdyssiaProject"
         tools:targetApi="31" >
         <activity
-            android:name=".OptionActivity"
-            android:exported="false" />
-        <activity
             android:name=".RecoverPassActivity"
             android:exported="false" />
         <activity
