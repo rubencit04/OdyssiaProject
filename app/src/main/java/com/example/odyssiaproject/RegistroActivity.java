@@ -1,4 +1,5 @@
 package com.example.odyssiaproject;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.odyssiaproject.entidad.Usuario;
 import com.example.odyssiaproject.negocio.GestorUsuario;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
@@ -56,9 +58,9 @@ public class RegistroActivity extends AppCompatActivity {
                                 "Registro exitoso: " + user.getEmail(),
                                 Toast.LENGTH_LONG
                         ).show();
-                        // Aquí podrías navegar a otra Activity, p. ej.:
-                        // startActivity(new Intent(RegistroActivity.this, MainActivity.class));
-                        // finish();
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(RegistroActivity.this, LogIn.class));
+                        finish();
                     }
 
                     @Override
