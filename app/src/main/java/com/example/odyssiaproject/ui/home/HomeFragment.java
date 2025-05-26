@@ -18,8 +18,8 @@ import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.entidad.Promociones;
 import com.example.odyssiaproject.persistencia.DaoPromociones;
-import com.example.odyssiaproject.persistencia.api.ApiService;
-import com.example.odyssiaproject.persistencia.api.RetrofitClient;
+import com.example.odyssiaproject.persistencia.api.ApiRenderService;
+import com.example.odyssiaproject.persistencia.api.RetrofitRenderClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * HomeFragment es el fragmento principal de la pantalla de inicio.
@@ -64,7 +68,7 @@ public class HomeFragment extends Fragment {
     private static final long RETRASO_PASO_SCROLL_MS_BASICO = 50;
     private LinearLayoutManager promocionesLayoutManager;
 
-    private ApiService apiService;
+    private ApiRenderService apiRenderService;
 
     DaoPromociones dao = new DaoPromociones();
 
@@ -136,44 +140,32 @@ public class HomeFragment extends Fragment {
         recyclerViewPaises.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerViewPaises.setHasFixedSize(true);
 
-        apiService = RetrofitClient.getApiService();
-        loadCountries();
+
+        apiRenderService = RetrofitRenderClient.getApiService();
+
+        apiRenderService.getPaises().enqueue(new Callback<List<Pais>>() {
+            @Override
+            public void onResponse(Call<List<Pais>> call, Response<List<Pais>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listaPaises = response.body();
+
+                    // Crear el adaptador con la lista obtenida
+                    adaptadorPaises = new AdaptadorPaises(listaPaises);
+                    recyclerViewPaises.setAdapter(adaptadorPaises);
+
+                } else {
+                    Log.e("HomeFragment", "Error en la respuesta al obtener países");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Pais>> call, Throwable t) {
+                Log.e("HomeFragment", "Fallo al obtener países", t);
+            }
+        });
 
         return root;
     }
-
-    /**
-     * Carga la lista de países desde Firestore.
-     */
-    private void loadCountries() {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("paises")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        listaPaises.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String nombre = document.getString("nombre");
-                            String imagen = document.getString("imagen");
-                            if (nombre != null && imagen != null) {
-                                listaPaises.add(new Pais(nombre, imagen));
-                            } else {
-                                Log.w("HomeFragment", "Nombre o imagen nulos en el documento: " + document.getId());
-                            }
-                        }
-
-                        if (adaptadorPaises == null) {
-                            adaptadorPaises = new AdaptadorPaises(listaPaises);
-                            recyclerViewPaises.setAdapter(adaptadorPaises);
-                        } else {
-                            adaptadorPaises.notifyDataSetChanged();
-                        }
-                    } else {
-                        Log.e("HomeFragment", "Error getting documents.", task.getException());
-                    }
-                });
-    }
-
 
     /**
      * Método del ciclo de vida del fragmento que se llama cuando la vista

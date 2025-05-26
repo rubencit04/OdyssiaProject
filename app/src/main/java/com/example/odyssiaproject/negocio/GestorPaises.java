@@ -9,12 +9,6 @@ import java.util.List;
 
 public class GestorPaises {
 
-    private final FirebaseFirestore db;
-
-    public GestorPaises() {
-        db = FirebaseFirestore.getInstance();
-    }
-
     /**
      * Obtiene la URL de la imagen de un país desde Firestore.
      *
@@ -28,32 +22,4 @@ public class GestorPaises {
         return pais.getImagen();
     }
 
-    /**
-     * Carga la lista de países desde Firestore.
-     *
-     * @param listener Callback para manejar el resultado.
-     */
-    public void cargarPaises(OnPaisesCargadosListener listener) {
-        db.collection("paises")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Pais> paises = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            Pais pais = doc.toObject(Pais.class);
-                            pais.setId(doc.getId()); // Guardar ID de Firestore
-                            paises.add(pais);
-                        }
-                        listener.onExito(paises);
-                    } else {
-                        listener.onError(task.getException());
-                    }
-                });
-    }
-
-    // Interfaz para manejar la respuesta asíncrona
-    public interface OnPaisesCargadosListener {
-        void onExito(List<Pais> paises);
-        void onError(Exception e);
-    }
 }

@@ -17,22 +17,17 @@ public class PromocionesAutoScroller {
     private final Runnable runnableScroll = new Runnable() {
         @Override
         public void run() {
-            Log.d("AutoScrollerBasico", "RunnableScroll: Paso iniciado. Tiempo: " + System.currentTimeMillis()); // <-- Añade esta línea
-
             if (recyclerView != null) {
                 recyclerView.smoothScrollBy(velocidadScrollPx, 0);
 
                 if (!recyclerView.canScrollHorizontally(1)) {
                     recyclerView.scrollToPosition(0);
-                    Log.d("AutoScrollerBasico", "Llegó al final, saltando a posición 0.");
                 }
 
-                handler.postDelayed(this, retrasoPasoScrollMs); //
-                 Log.d("AutoScrollerBasico", "Reposteando para el siguiente paso.");
+                handler.postDelayed(this, retrasoPasoScrollMs);
 
             } else {
                 detenerScroll();
-                Log.w("AutoScrollerBasico", "Scroll básico detenido: RecyclerView es null.");
             }
         }
     };
@@ -56,7 +51,6 @@ public class PromocionesAutoScroller {
      * Inicia el proceso de scroll automático básico.
      */
     public void iniciarScroll() {
-        Log.d("AutoScrollerBasico", "Scroll básico iniciado. Posteando primer paso.");
         handler.postDelayed(runnableScroll, retrasoPasoScrollMs);
     }
 
@@ -65,7 +59,6 @@ public class PromocionesAutoScroller {
      */
     public void detenerScroll() {
         handler.removeCallbacks(runnableScroll);
-        Log.d("AutoScrollerBasico", "detenerScroll() llamado y ejecutado.");
     }
 
     // Métodos opcionales de pausa/reanudar ...

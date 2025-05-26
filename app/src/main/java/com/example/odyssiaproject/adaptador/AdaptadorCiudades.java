@@ -21,8 +21,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Ciudad;
-import com.example.odyssiaproject.negocio.GestorCiudades;
-import com.example.odyssiaproject.ui.city.CityFragment;
 import com.example.odyssiaproject.ui.option.OptionFragment;
 
 import java.util.List;
@@ -40,8 +38,6 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
 
     // Lista de objetos Ciudad a mostrar.
     private List<Ciudad> listaCiudades;
-    // Instancia del GestorCiudades para obtener la URL de la imagen de la ciudad.
-    private GestorCiudades gestorCiudades;
 
     /**
      * Constructor del adaptador.
@@ -50,7 +46,6 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
      */
     public AdaptadorCiudades(List<Ciudad> listaCiudades) {
         this.listaCiudades = listaCiudades;
-        this.gestorCiudades = new GestorCiudades();
     }
 
     /**
@@ -78,16 +73,17 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Obtiene la ciudad actual según la posición.
         Ciudad ciudadActual = listaCiudades.get(position);
-        // Obtiene la URL de la imagen de la ciudad utilizando el GestorCiudades.
-        String imagenCiudadesUrl = gestorCiudades.imagenCiudad(ciudadActual);
-        if (imagenCiudadesUrl == null || imagenCiudadesUrl.isEmpty()) {
+
+        // Obtiene la URL de la imagen directamente desde el objeto Ciudad.
+        String imagenCiudadUrl = ciudadActual.getImagen();
+        if (imagenCiudadUrl == null || imagenCiudadUrl.isEmpty()) {
             Log.w("Glide", "URL de la imagen es nula o vacía para: " + ciudadActual.getNombre());
-            imagenCiudadesUrl = "url_default_image";
+            imagenCiudadUrl = "https://ejemplo.com/default.jpg"; // Cambia a una URL de imagen por defecto válida
         }
 
         // Carga la imagen en el ImageView utilizando Glide.
         Glide.with(holder.itemView.getContext())
-                .load(imagenCiudadesUrl)
+                .load(imagenCiudadUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(true)
                 .into(holder.imagenCiudad);
@@ -108,9 +104,7 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
                 }
                 AppCompatActivity activity = (AppCompatActivity) context;
 
-
                 OptionFragment optionFragment = OptionFragment.newInstance(ciudadClick.getNombre());
-
 
                 activity.getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, optionFragment)
