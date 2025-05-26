@@ -1,131 +1,165 @@
 package com.example.odyssiaproject.ui.ajustes;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.odyssiaproject.LogIn;
+import com.example.odyssiaproject.MainActivity;
 import com.example.odyssiaproject.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.odyssiaproject.ui.home.HomeFragment;
 
 
 public class ConfigFragment extends Fragment {
 
-    private ConfigViewModel configViewModel;
-    private FirebaseAuth mAuth;
+    private Button btnPerfil, btnCambioPass, btnAcercaDe, btnContinuar, btnLogOut, btnEliminar;
+    private Switch swTema;
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_config, container, false);
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-        configViewModel = new ViewModelProvider(this).get(ConfigViewModel.class);
-        mAuth = FirebaseAuth.getInstance();
+        View view = inflater.inflate(R.layout.fragment_config, container, false);
 
-        Button btnPerfil = root.findViewById(R.id.btnPerfil);
-        Button btnCambioPass = root.findViewById(R.id.btnCambioPass);
-        Switch switchNotifications = root.findViewById(R.id.swTema);
-        ImageButton btnAcercaDe = root.findViewById(R.id.btnAcercaDe);
-        Button btnLogout = root.findViewById(R.id.btnLogOut);
-        Button btnEliminarCuenta = root.findViewById(R.id.btnEliminar);
+        // Referencias a los botones y switch
+        btnPerfil = view.findViewById(R.id.btnPerfil);
+        btnCambioPass = view.findViewById(R.id.btnCambioPass);
+        btnAcercaDe = view.findViewById(R.id.btnAcercaDe);
+        btnContinuar = view.findViewById(R.id.btnContinuar);
+        btnLogOut = view.findViewById(R.id.btnLogOut);
+        btnEliminar = view.findViewById(R.id.btnEliminar);
+        swTema = view.findViewById(R.id.swTema);
 
-        // Abrir perfil
-        btnPerfil.setOnClickListener(v -> {
-            PerfilActivity dialog = new PerfilActivity();
-            dialog.setOnNombreCambiadoListener(nuevoNombre -> {
-                Toast.makeText(getActivity(), "Nombre cambiado a: " + nuevoNombre, Toast.LENGTH_SHORT).show();
-                // Aquí podrías guardar el cambio en la base de datos o en SharedPreferences
-            });
-            dialog.show(getParentFragmentManager(), "EditarPerfilDialog");
-        });
+        setupListeners();
 
-        // Ir a cambio de contraseña
-        btnCambioPass.setOnClickListener(v -> {
-            CambioPasswordActivity dialog = new CambioPasswordActivity();
-            dialog.setOnPasswordCambiadaListener(nuevaPassword -> {
-                Toast.makeText(getActivity(), "Contraseña actualizada", Toast.LENGTH_SHORT).show();
-                // Aquí podrías guardar la nueva contraseña en la base de datos o API
-            });
-            dialog.show(getParentFragmentManager(), "CambiarPasswordDialog");
-        });
+        return view;
+    }
 
-        // Observar y actualizar el estado del Switch de notificaciones
-        configViewModel.getNotificacionesActivas().observe(getViewLifecycleOwner(), switchNotifications::setChecked);
-        switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            configViewModel.cambiarEstadoNotificaciones(isChecked);
+    private void setupListeners() {
+
+        btnPerfil.setOnClickListener(v -> showPerfilDialog());
+
+        btnCambioPass.setOnClickListener(v -> showCambioPassDialog());
+
+        btnAcercaDe.setOnClickListener(v -> showAcercaDeDialog());
+
+        swTema.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Aquí puedes alternar tema claro/oscuro o notificaciones
             String mensaje = isChecked ? "Notificaciones activadas" : "Notificaciones desactivadas";
-            Toast.makeText(getActivity(), mensaje, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), mensaje, Toast.LENGTH_SHORT).show();
         });
 
-        // Acerca de
-        btnAcercaDe.setOnClickListener(v -> {
-            new AlertDialog.Builder(getActivity())
-                    .setTitle("Acerca de Odyssia")
-                    .setMessage("Odyssia v1.0\nAplicación desarrollada por Odyssia Project.")
-                    .setPositiveButton("OK", null)
-                    .show();
+        btnContinuar.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Continuando a la siguiente pantalla...", Toast.LENGTH_SHORT).show();
+            // Navegar al HomeFragment
+            requireActivity().getSupportFragmentManager().popBackStack();
         });
 
-        // Cerrar sesión
-        btnLogout.setOnClickListener(v -> {
-            new AlertDialog.Builder(getActivity())
+        btnLogOut.setOnClickListener(v -> {
+            new AlertDialog.Builder(requireContext())
                     .setTitle("Cerrar sesión")
-                    .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                    .setMessage("¿Estás seguro que deseas cerrar sesión?")
                     .setPositiveButton("Sí", (dialog, which) -> {
-                        mAuth.signOut();
-                        // Redirigir al Login
-                        Intent intent = new Intent(getActivity(), LogIn.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        // 1. Limpiar datos del usuario
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.clear();  // o .remove("clave") si quieres solo algunas
+                        editor.apply();
+
+                        // 2. Volver al LoginActivity
+                        Intent intent = new Intent(requireActivity(), LogIn.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Evita volver con "back"
                         startActivity(intent);
-                        getActivity().finish();
+
+                        // 3. Mensaje de confirmación
+                        Toast.makeText(getContext(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("Cancelar", null)
                     .show();
         });
 
-        // Eliminar cuenta
-        btnEliminarCuenta.setOnClickListener(v -> {
-            new AlertDialog.Builder(getActivity())
+
+        btnEliminar.setOnClickListener(v -> {
+            new AlertDialog.Builder(requireContext())
                     .setTitle("Eliminar cuenta")
-                    .setMessage("Esta acción es irreversible. ¿Seguro que deseas eliminar tu cuenta?")
+                    .setMessage("Esta acción eliminará tu cuenta permanentemente. ¿Deseas continuar?")
                     .setPositiveButton("Eliminar", (dialog, which) -> {
-
-                        FirebaseUser user = mAuth.getCurrentUser();
-
-                        if (user != null) {
-                            user.delete()
-                                    .addOnCompleteListener(task -> {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(getActivity(), "Cuenta eliminada", Toast.LENGTH_SHORT).show();
-                                            // Redirigir al login
-                                            Intent intent = new Intent(getActivity(), LogIn.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            getActivity().finish();
-                                        } else {
-                                            Toast.makeText(getActivity(), "Error al eliminar la cuenta", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
+                        Toast.makeText(getContext(), "Cuenta eliminada", Toast.LENGTH_SHORT).show();
+                        // Aquí va la lógica real para eliminar cuenta
                     })
                     .setNegativeButton("Cancelar", null)
                     .show();
         });
+    }
 
-        return root;
+    private void showPerfilDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Editar Perfil");
+
+        final EditText input = new EditText(requireContext());
+        input.setHint("Escribe tu nombre...");
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setPadding(60, 40, 60, 40);
+
+        builder.setView(input);
+
+        builder.setPositiveButton("Confirmar", (dialog, which) -> {
+            String nombre = input.getText().toString().trim();
+            if (!nombre.isEmpty()) {
+                // Guardar en SharedPreferences
+                SharedPreferences prefs = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("nombre_usuario", nombre);
+                editor.apply();
+
+                Toast.makeText(requireContext(), "Nombre guardado: " + nombre, Toast.LENGTH_SHORT).show();
+
+                // Notificar a MainActivity para actualizar el TextView
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).actualizarNombreUsuario();
+                }
+
+            } else {
+                Toast.makeText(requireContext(), "Por favor ingresa un nombre.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+
+    private void showCambioPassDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Cambiar Contraseña");
+        builder.setMessage("Funcionalidad para cambiar la contraseña.");
+        builder.setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private void showAcercaDeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Acerca de Odyssia");
+        builder.setMessage("Odyssia v2.0\nAplicación desarrollada por Odyssia Project.");
+        builder.setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss());
+        builder.show();
     }
 }

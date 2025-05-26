@@ -1,10 +1,12 @@
 package com.example.odyssiaproject;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -59,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        actualizarNombreUsuario();
+
         // Cargar el fragmento inicial (HomeFragment) si no hay estado previo guardado.
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
@@ -80,6 +84,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
+            @Override public void onDrawerOpened(@NonNull View drawerView) {
+                actualizarNombreUsuario();
+            }
+            @Override public void onDrawerClosed(@NonNull View drawerView) {}
+            @Override public void onDrawerStateChanged(int newState) {}
+        });
+
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment instanceof ConfigFragment || currentFragment instanceof FavsFragment) {
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().hide();
+                }
+            } else {
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().show();
+                }
+            }
+        });
+
     }
 
     /**
@@ -94,27 +121,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
         Log.d("NAVIGATION", "Item seleccionado: " + item.getItemId());
 
-        // Determina qué fragmento cargar en función del ítem seleccionado.
-        if (item.getItemId() == R.id.athyssia) {
-            Log.d("NAVIGATION", "Cargando AthyssiaFragment...");
-            loadFragment(new HomeFragment());
-        } else if (item.getItemId() == R.id.favs) {
-            Log.d("NAVIGATION", "Cargando FavsFragment...");
-            loadFragment(new FavsFragment());
-        } else if (item.getItemId() == R.id.swipeGo) {
-            Log.d("NAVIGATION", "Cargando SwipeGoFragment...");
-            loadFragment(new FavsFragment());
-        } else if (item.getItemId() == R.id.miOdyssia) {
-            Log.d("NAVIGATION", "Cargando MiOdyssiaFragment...");
-            loadFragment(new FavsFragment());
-        } else if (item.getItemId() == R.id.ajustes) {
-            Log.d("NAVIGATION", "Cargando ConfigFragment...");
-            loadFragment(new ConfigFragment());
-        } else if (item.getItemId() == R.id.marketplace) {
-            Log.d("NAVIGATION", "Cargando MarketplaceFragment...");
-            loadFragment(new ConfigFragment());
+        try {
+            // Determina qué fragmento cargar en función del ítem seleccionado.
+            if (item.getItemId() == R.id.athyssia) {
+                Log.d("NAVIGATION", "Cargando AthyssiaFragment...");
+                loadFragment(new HomeFragment());
+            } else if (item.getItemId() == R.id.favs) {
+                Log.d("NAVIGATION", "Cargando FavsFragment...");
+                loadFragment(new FavsFragment());
+            } else if (item.getItemId() == R.id.swipeGo) {
+                Log.d("NAVIGATION", "Cargando SwipeGoFragment...");
+                loadFragment(new FavsFragment());
+            } else if (item.getItemId() == R.id.miOdyssia) {
+                Log.d("NAVIGATION", "Cargando MiOdyssiaFragment...");
+                loadFragment(new FavsFragment());
+            } else if (item.getItemId() == R.id.ajustes) {
+                Log.d("NAVIGATION", "Cargando ConfigFragment...");
+                loadFragment(new ConfigFragment());
+            } else if (item.getItemId() == R.id.marketplace) {
+                Log.d("NAVIGATION", "Cargando MarketplaceFragment...");
+                loadFragment(new ConfigFragment());
+            }
+        } catch (Exception e) {
+            Log.e("NAVIGATION", "Error al cargar fragmento: ", e);
         }
-
         // Cierra el Navigation Drawer tras la selección.
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -127,8 +157,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);  // Reemplaza el contenedor con el nuevo fragmento.
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
+
+        if (fragment instanceof ConfigFragment ||
+                fragment instanceof FavsFragment ) {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().hide();
+            }
+        } else {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().show();
+            }
+        }
     }
 
     /**
@@ -156,5 +198,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
+    }
+
+    public void actualizarNombreUsuario() {
+        View headerView = navigationView.getHeaderView(0);
+        TextView twUsuario = headerView.findViewById(R.id.twUsuario);
+
+        SharedPreferences prefs = getSharedPreferences("user_data", MODE_PRIVATE);
+        String nombre = prefs.getString("nombre_usuario", "Usuario"); // Valor por defecto: "Usuario"
+
+        twUsuario.setText(nombre);
     }
 }
