@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Loading"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/v2_loading_background"
-    android:id="@+id/Loading"
     tools:context=".LoadingPage">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/cardview_loading"
         android:gravity="center"
         android:orientation="vertical"
+        android:padding="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintVertical_bias="0.5">
 
         <!-- Logo centrado -->
         <ImageView
-            android:layout_width="110dp"
-            android:layout_height="105dp"
-            android:layout_marginBottom="30dp"
+            android:layout_width="90dp"
+            android:layout_height="85dp"
+            android:layout_marginBottom="24dp"
             android:src="@drawable/v2_odyssia_icon" />
 
         <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="@string/v2_slogan"
             android:fontFamily="@font/antic"
             android:textStyle="bold"
             android:textColor="#000000"
-            android:textSize="18sp"/>
+            android:textSize="20sp"/>
 
         <!-- Subtítulo -->
         <TextView
@@ -46,7 +48,7 @@
             android:fontFamily="@font/antic"
             android:textStyle="bold"
             android:textColor="#5294FF"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

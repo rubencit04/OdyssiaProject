@@ -8,44 +8,46 @@
     android:background="@color/white"
     tools:context=".ui.option.OptionFragment">
 
-    <!-- Top menu: Se incluye la custom_toolbar.xml -->
-
-
-    <!-- RecyclerView Promotions -->
+    <!-- RecyclerView Promotions (horizontal) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rwPromotions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:clipToPadding="false"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_promotions" />
 
     <!-- Sort Button -->
     <ImageButton
         android:id="@+id/btnSortBy"
         android:layout_width="70dp"
-        android:layout_height="75dp"
+        android:layout_height="70dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/buttonsortby2"
         android:contentDescription="sort by button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintTop_toBottomOf="@id/rwPromotions"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rwPromotions" />
+        app:layout_constraintBottom_toTopOf="@id/rwOptions"
+        android:layout_marginStart="4dp"
+        />
 
-        <!-- RecyclerView Opciones -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rwOptions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSortBy"
-            tools:listitem="@layout/item_options" />
+    <!-- RecyclerView Opciones (vertical) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rwOptions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/btnSortBy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="12dp"
+        tools:listitem="@layout/item_options" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
