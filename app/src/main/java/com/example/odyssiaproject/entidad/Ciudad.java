@@ -16,7 +16,7 @@ public class Ciudad {
     private String imagen;
 
     private int id;
-    private Pais pais;
+    private String pais;
     private List<Actividad> listaActividades;
 
     public String getNombre() {
@@ -51,11 +51,11 @@ public class Ciudad {
         this.id = id;
     }
 
-    public Pais getPais() {
+    public String getPais() {
         return pais;
     }
 
-    public void setPais(Pais pais) {
+    public void setPais(String pais) {
         this.pais = pais;
     }
 

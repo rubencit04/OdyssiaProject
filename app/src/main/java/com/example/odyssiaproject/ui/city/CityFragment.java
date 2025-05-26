@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.adaptador.AdaptadorCiudades;
-import com.example.odyssiaproject.adaptador.AdaptadorPaises;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.entidad.Pais;
@@ -23,9 +22,6 @@ import com.example.odyssiaproject.persistencia.api.RetrofitRenderClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
 import com.example.odyssiaproject.persistencia.api.ApiRenderService;
 import com.example.odyssiaproject.singelton.ListaPromocionesSingelton;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;

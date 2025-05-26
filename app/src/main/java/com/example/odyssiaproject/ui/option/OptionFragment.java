@@ -1,3 +1,4 @@
+
 package com.example.odyssiaproject.ui.option;
 
 import android.os.Bundle;
@@ -18,11 +19,8 @@ import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.adaptador.AdaptadorMonumentos;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.entidad.Ciudad;
-import com.example.odyssiaproject.entidad.Monumentos;
 import com.example.odyssiaproject.entidad.Promociones;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
-import com.example.odyssiaproject.singelton.ListaMonumentosSingelton;
-import com.example.odyssiaproject.singelton.ListaPromocionesSingelton;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -102,49 +100,41 @@ public class OptionFragment extends Fragment {
         LinearLayoutManager promocionesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
 
+        /*
         List<Promociones> listaPromociones = ListaPromocionesSingelton.getInstance().getListaPromociones();
-        if (listaPromociones == null) {
-            listaPromociones = new ArrayList<>();
-        }
+                if (listaPromociones == null) {
+                    listaPromociones = new ArrayList<>();
+                }
 
-        adaptadorPromociones = new AdaptadorPromociones(listaPromociones);
-        recyclerViewPromociones.setAdapter(adaptadorPromociones);
+                adaptadorPromociones = new AdaptadorPromociones(listaPromociones);
+                recyclerViewPromociones.setAdapter(adaptadorPromociones);
 
-        controladorScrollPromociones = new PromocionesAutoScroller(
-                recyclerViewPromociones,
-                VELOCIDAD_SCROLL_PX_BASICO,
-                RETRASO_PASO_SCROLL_MS_BASICO
-        );
+              controladorScrollPromociones = new PromocionesAutoScroller(
+                       recyclerViewPromociones,
+                     VELOCIDAD_SCROLL_PX_BASICO,
+                       RETRASO_PASO_SCROLL_MS_BASICO
+                );
 
-        if (!listaPromociones.isEmpty()) {
-            controladorScrollPromociones.iniciarScroll();
-        } else {
-            Log.w("OptionFragment", "Lista de promociones del Singleton está vacía. No se inicia el scroll automático.");
-        }
+                if (!listaPromociones.isEmpty()) {
+                   controladorScrollPromociones.iniciarScroll();
+               } else {
+                  Log.w("OptionFragment", "Lista de promociones del Singleton está vacía. No se inicia el scroll automático.");
+              }
+
+         */
+
+
 
         recyclerViewMonumentos = root.findViewById(R.id.rwOptions);
         recyclerViewMonumentos.setHasFixedSize(true);
         recyclerViewMonumentos.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        if (nombreCiudad != null) {
-            List<Monumentos> listaMonumentos = ListaMonumentosSingelton.getInstance().obtenerMonumentosPorCiudad(nombreCiudad);
-            if (listaMonumentos == null) {
-                listaMonumentos = new ArrayList<>();
-            }
-            ciudad = new Ciudad();
-            ciudad.setNombre(nombreCiudad);
-            Log.d("OptionFragment", "Monumentos para ciudad: " + nombreCiudad);
 
-            adaptadorMonumentos = new AdaptadorMonumentos(listaMonumentos);
-            recyclerViewMonumentos.setAdapter(adaptadorMonumentos);
-
-        } else {
-            Log.e("OptionFragment", "El nombre de la ciudad no se pudo recuperar de los argumentos.");
-        }
 
 
         return root;
     }
+
 
     @Override
     public void onDestroyView() {
@@ -178,3 +168,4 @@ public class OptionFragment extends Fragment {
     }
 
 }
+

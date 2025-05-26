@@ -93,16 +93,13 @@ public class AdaptadorPaises extends RecyclerView.Adapter<AdaptadorPaises.ViewHo
         // Intenta obtener la URL de la imagen del país utilizando el GestorPaises.
         String imagenPaisesUrl = gestorPaises.imagenPaises(paisActual);
 
-        // Validación de la URL: si es nula o vacía, se asigna una URL por defecto.
         if (imagenPaisesUrl == null || imagenPaisesUrl.isEmpty()) {
             Log.w("Glide", "URL de la imagen es nula o vacía para el país: " + paisActual.getNombre());
-            imagenPaisesUrl = "url_default_image";  // Se podría reemplazar por un recurso drawable.
+            imagenPaisesUrl = "url_default_image";  // Esto debería ser un recurso local o una URL válida
         }
 
-        // Carga la imagen usando Glide.
-        // ⚠️ Nota: Se utiliza paisActual.getNombre() en lugar de imagenPaisesUrl, lo que podría ser un error.
         Glide.with(holder.itemView.getContext())
-                .load(imagenPaisesUrl)  // aquí usas la URL que obtuviste
+                .load(imagenPaisesUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(true)
                 .into(holder.imagenPais);
