@@ -9,41 +9,46 @@
     android:background="#F8F8F8"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- RecyclerView Promotions -->
+    <!-- RecyclerView Promotions - Horizontal -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rwPromotions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:clipToPadding="false"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_promotions" />
 
-    <!-- Sort Button -->
+    <!-- Sort Button - Izquierda debajo de promociones -->
     <ImageButton
         android:id="@+id/btnSortBy"
         android:layout_width="70dp"
-        android:layout_height="75dp"
+        android:layout_height="70dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/buttonsortby2"
         android:contentDescription="sort by button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@id/rwPromotions"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rwPromotions" />
+        app:layout_constraintBottom_toTopOf="@id/rwCountries"
+        android:layout_marginStart="4dp"
+        />
 
-    <!-- RecyclerView Countries -->
+    <!-- RecyclerView Countries - Vertical, ocupa resto de espacio -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rwCountries"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSortBy"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSortBy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="12dp"
         tools:listitem="@layout/item_countries" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

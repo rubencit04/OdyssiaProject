@@ -9,40 +9,44 @@
     android:background="@color/white"
     tools:context=".ui.city.CityFragment">
 
-    <!-- RecyclerView Promotions -->
+    <!-- RecyclerView Promotions (horizontal) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rwPromotions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:clipToPadding="false"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_promotions" />
 
-    <!-- Sort Button -->
+    <!-- Sort Button (a la izquierda debajo del RecyclerView de promociones) -->
     <ImageButton
         android:id="@+id/btnSortBy"
         android:layout_width="70dp"
-        android:layout_height="75dp"
+        android:layout_height="70dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/buttonsortby2"
         android:contentDescription="sort by button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@id/rwPromotions"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rwPromotions" />
+        app:layout_constraintBottom_toTopOf="@id/rwCities"
+        android:layout_marginStart="4dp"
+        />
 
-    <!-- RecyclerView Cities -->
+    <!-- RecyclerView Cities (vertical, ocupa resto del espacio) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rwCities"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btnSortBy"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSortBy"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_cities" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
