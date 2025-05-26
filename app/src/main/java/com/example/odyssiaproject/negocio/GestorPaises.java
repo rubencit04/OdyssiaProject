@@ -1,11 +1,7 @@
 package com.example.odyssiaproject.negocio;
 
 import com.example.odyssiaproject.entidad.Pais;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class GestorPaises {
 

@@ -141,7 +141,10 @@ public class ConfigFragment extends Fragment {
                 // Notificar a MainActivity para actualizar el TextView
                 if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).actualizarNombreUsuario();
+
                 }
+                dialog.dismiss();
+
 
             } else {
                 Toast.makeText(requireContext(), "Por favor ingresa un nombre.", Toast.LENGTH_SHORT).show();
@@ -185,7 +188,7 @@ public class ConfigFragment extends Fragment {
                 if (getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).actualizarNombreUsuario();
                 }
-
+                dialog.dismiss();
             } else {
                 Toast.makeText(requireContext(), "Por favor ingresa una contraseña.", Toast.LENGTH_SHORT).show();
             }

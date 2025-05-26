@@ -13,7 +13,7 @@ public class GestorMonumentos {
      */
     public String imagenMonumento(Monumentos monumento) {
         if (monumento == null || monumento.getImagen() == null || monumento.getImagen().isEmpty()) {
-            return "https://ejemplo.com/default_monumento.jpg"; // imagen por defecto
+            return "https://ejemplo.com/default.jpg"; // imagen por defecto
         }
         return monumento.getImagen();
     }

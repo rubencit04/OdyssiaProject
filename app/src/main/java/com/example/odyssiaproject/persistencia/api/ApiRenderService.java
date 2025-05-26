@@ -4,6 +4,7 @@ package com.example.odyssiaproject.persistencia.api;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.entidad.Monumentos;
 import com.example.odyssiaproject.entidad.Pais;
+import com.example.odyssiaproject.entidad.Promociones;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -27,5 +28,12 @@ public interface ApiRenderService {
 
     @GET("/monumentos")
     Call<List<Monumentos>> getMonumentosPorCiudad(@Query("ciudad") String nombreCiudad); // Filtrar por ciudad
+
+    @GET("/promociones")
+    Call<List<Promociones>> getPromociones();
+
+    @GET("/promociones")
+    Call<List<Promociones>> getPromocionesPorPais(@Query("pais") String nombrePais); // Filtrar por país
+
 
 }

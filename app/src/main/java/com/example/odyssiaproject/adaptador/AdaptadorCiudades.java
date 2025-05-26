@@ -21,6 +21,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Ciudad;
+import com.example.odyssiaproject.negocio.GestorCiudades;
+import com.example.odyssiaproject.negocio.GestorPaises;
 import com.example.odyssiaproject.ui.option.OptionFragment;
 
 import java.util.List;
@@ -39,6 +41,8 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
     // Lista de objetos Ciudad a mostrar.
     private List<Ciudad> listaCiudades;
 
+    private GestorCiudades gestorCiudades;
+
     /**
      * Constructor del adaptador.
      *
@@ -46,6 +50,7 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
      */
     public AdaptadorCiudades(List<Ciudad> listaCiudades) {
         this.listaCiudades = listaCiudades;
+        this.gestorCiudades = new GestorCiudades();
     }
 
     /**
@@ -75,11 +80,7 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
         Ciudad ciudadActual = listaCiudades.get(position);
 
         // Obtiene la URL de la imagen directamente desde el objeto Ciudad.
-        String imagenCiudadUrl = ciudadActual.getImagen();
-        if (imagenCiudadUrl == null || imagenCiudadUrl.isEmpty()) {
-            Log.w("Glide", "URL de la imagen es nula o vacía para: " + ciudadActual.getNombre());
-            imagenCiudadUrl = "https://ejemplo.com/default.jpg"; // Cambia a una URL de imagen por defecto válida
-        }
+        String imagenCiudadUrl = gestorCiudades.imagenCiudad(ciudadActual);
 
         // Carga la imagen en el ImageView utilizando Glide.
         Glide.with(holder.itemView.getContext())

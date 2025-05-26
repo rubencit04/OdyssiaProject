@@ -5,7 +5,7 @@ public class Promociones {
     private String link;
     private String imagen;
     private String pais;
-    private int id;
+
 
     public Promociones() {
     }
@@ -27,13 +27,7 @@ public class Promociones {
     public void setImagen(String imagen) { this.imagen = imagen; }
     public void setPais(String pais) { this.pais = pais; }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
