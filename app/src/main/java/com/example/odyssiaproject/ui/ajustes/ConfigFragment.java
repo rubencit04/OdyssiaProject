@@ -1,5 +1,6 @@
 package com.example.odyssiaproject.ui.ajustes;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,13 +24,14 @@ import androidx.appcompat.app.AlertDialog;
 import com.example.odyssiaproject.LogIn;
 import com.example.odyssiaproject.MainActivity;
 import com.example.odyssiaproject.R;
-import com.example.odyssiaproject.ui.home.HomeFragment;
 
 
 public class ConfigFragment extends Fragment {
 
-    private Button btnPerfil, btnCambioPass, btnAcercaDe, btnContinuar, btnLogOut, btnEliminar;
+    private Button btnPerfil, btnCambioPass, btnAcercaDe, btnContinuar, btnLogOut, btnEliminar, btnConfirmar, btnCancelar;
     private Switch swTema;
+    private EditText etNombrePerfil, etCambioPass;
+
 
     @Nullable
     @Override
@@ -55,7 +57,7 @@ public class ConfigFragment extends Fragment {
 
     private void setupListeners() {
 
-        btnPerfil.setOnClickListener(v -> showPerfilDialog());
+        btnPerfil.setOnClickListener(v -> showProfileDialog());
 
         btnCambioPass.setOnClickListener(v -> showCambioPassDialog());
 
@@ -110,19 +112,23 @@ public class ConfigFragment extends Fragment {
         });
     }
 
-    private void showPerfilDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Editar Perfil");
+    private void showProfileDialog() {
+        // Inflamos el layout personalizado
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.v2_dialog_profile, null);
 
-        final EditText input = new EditText(requireContext());
-        input.setHint("Escribe tu nombre...");
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setPadding(60, 40, 60, 40);
+        // Creamos el diálogo usando AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()); // Puedes definir un estilo si lo deseas
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
 
-        builder.setView(input);
+        // Referencias a los componentes del layout
+        etNombrePerfil = dialogView.findViewById(R.id.etNombrePerfil);
+        btnConfirmar = dialogView.findViewById(R.id.btnConfirmar);
+        btnCancelar = dialogView.findViewById(R.id.btnCancelar);
 
-        builder.setPositiveButton("Confirmar", (dialog, which) -> {
-            String nombre = input.getText().toString().trim();
+        // Acción al confirmar
+        btnConfirmar.setOnClickListener(v -> {
+            String nombre = etNombrePerfil.getText().toString().trim();
             if (!nombre.isEmpty()) {
                 // Guardar en SharedPreferences
                 SharedPreferences prefs = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
@@ -142,17 +148,54 @@ public class ConfigFragment extends Fragment {
             }
         });
 
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
-        builder.show();
+        // Acción al cancelar
+        btnCancelar.setOnClickListener(v -> dialog.dismiss());
+
+        // Mostrar el diálogo
+        dialog.show();
     }
 
-
     private void showCambioPassDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Cambiar Contraseña");
-        builder.setMessage("Funcionalidad para cambiar la contraseña.");
-        builder.setPositiveButton("Cerrar", (dialog, which) -> dialog.dismiss());
-        builder.show();
+        // Inflamos el layout personalizado
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.v2_dialog_cambiar_pass, null);
+
+        // Creamos el diálogo usando AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()); // Puedes definir un estilo si lo deseas
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        // Referencias a los componentes del layout
+        etCambioPass = dialogView.findViewById(R.id.etCambioPass);
+        btnConfirmar = dialogView.findViewById(R.id.btnConfirmar);
+        btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+
+        // Acción al confirmar
+        btnConfirmar.setOnClickListener(v -> {
+            String contrasenia = etCambioPass.getText().toString().trim();
+            if (!contrasenia.isEmpty()) {
+                // Guardar en SharedPreferences
+                SharedPreferences prefs = requireActivity().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("contrasenia", contrasenia);
+                editor.apply();
+
+                Toast.makeText(requireContext(), "Contraseña guardada: " + contrasenia, Toast.LENGTH_SHORT).show();
+
+                // Notificar a MainActivity para actualizar el TextView
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).actualizarNombreUsuario();
+                }
+
+            } else {
+                Toast.makeText(requireContext(), "Por favor ingresa una contraseña.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Acción al cancelar
+        btnCancelar.setOnClickListener(v -> dialog.dismiss());
+
+        // Mostrar el diálogo
+        dialog.show();
     }
 
     private void showAcercaDeDialog() {

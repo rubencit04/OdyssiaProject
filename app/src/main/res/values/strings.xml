@@ -55,4 +55,10 @@
     <string name="v2_btnLogOut">Cerrar Sesión</string>
     <string name="v2_btnEliminar">Eliminar Cuenta</string>
 
+    <!-- Fragmentos -->
+    <string name="v2_dialog_profile">Editar Nombre</string>
+    <string name="v2_dialog_cambioPass">Cambio de Contraseña</string>
+    <string name="v2_btnConfirmar">Confirmar</string>
+    <string name="v2_btnCancelar">Cancelar</string>
+
 </resources>
