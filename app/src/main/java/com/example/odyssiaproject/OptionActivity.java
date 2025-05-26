@@ -1,45 +1,26 @@
 package com.example.odyssiaproject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.odyssiaproject.adaptador.AdaptadorCiudades;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
-import com.example.odyssiaproject.entidad.Ciudad;
-import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.entidad.Promociones;
-import com.example.odyssiaproject.persistencia.api.RetrofitClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
 import com.example.odyssiaproject.singelton.ListaPromocionesSingelton;
-import com.example.odyssiaproject.ui.ajustes.ConfigFragment;
-import com.example.odyssiaproject.ui.city.CityFragment;
-import com.example.odyssiaproject.ui.favs.FavsFragment;
-import com.example.odyssiaproject.ui.home.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;

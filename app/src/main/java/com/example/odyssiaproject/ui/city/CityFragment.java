@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.adaptador.AdaptadorCiudades;
+import com.example.odyssiaproject.adaptador.AdaptadorPaises;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.entidad.Promociones;
+import com.example.odyssiaproject.persistencia.api.RetrofitRenderClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
-import com.example.odyssiaproject.persistencia.api.ApiService;
-import com.example.odyssiaproject.persistencia.api.RetrofitClient;
+import com.example.odyssiaproject.persistencia.api.ApiRenderService;
 import com.example.odyssiaproject.singelton.ListaPromocionesSingelton;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,6 +29,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CityFragment extends Fragment {
 
@@ -51,17 +56,18 @@ public class CityFragment extends Fragment {
     private String nombreCiudad;
 
     // Retrofit API
-    private ApiService apiService;
+    private ApiRenderService apiRenderService;
 
 
     public CityFragment() {
 
     }
 
-    public static CityFragment newInstance(String nombreCiudad) {
+    public static CityFragment newInstance(String nombreCiudad, String nombrePais) {
         CityFragment fragment = new CityFragment();
         Bundle args = new Bundle();
         args.putString(ARG_NOMBRE_CIUDAD, nombreCiudad);
+        args.putString("pais", nombrePais); // <-- Añadir esto
         fragment.setArguments(args);
         return fragment;
     }
@@ -128,63 +134,33 @@ public class CityFragment extends Fragment {
             Log.e("CityFragment", "No se recibieron argumentos");
         }
 
-        apiService = RetrofitClient.getApiService();
-        loadCities();
+
+        apiRenderService = RetrofitRenderClient.getApiService();
+
+        apiRenderService.getCiudadesPorPais(pais.getNombre()).enqueue(new Callback<List<Ciudad>>() {
+            @Override
+            public void onResponse(Call<List<Ciudad>> call, Response<List<Ciudad>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listaCiudades = response.body();
+
+                    adaptadorCiudades = new AdaptadorCiudades(listaCiudades);
+                    recyclerViewCiudades.setAdapter(adaptadorCiudades);
+
+                } else {
+                    Log.e("CityFragment", "Error en la respuesta al obtener ciudades");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Ciudad>> call, Throwable t) {
+                Log.e("CityFragment", "Fallo al obtener ciudades", t);
+            }
+        });
+
 
         return root;
     }
 
-    // Método loadCities (se mantiene)
-    private void loadCities() {
-        if (pais == null) {
-            Log.e("CityFragment", "El objeto 'pais' es null, no se puede cargar las ciudades.");
-            return;
-        }
-
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("paises")
-                .whereEqualTo("nombre", pais.getNombre())
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        for (QueryDocumentSnapshot paisDoc : task.getResult()) {
-                            String paisId = paisDoc.getId();
-
-                            db.collection("paises")
-                                    .document(paisId)
-                                    .collection("listaCiudades")
-                                    .get() // Se mantiene
-                                    .addOnCompleteListener(cityTask -> {
-                                        if (cityTask.isSuccessful()) {
-                                            listaCiudades.clear();
-                                            for (QueryDocumentSnapshot cityDoc : cityTask.getResult()) {
-                                                String nombreCiudad = cityDoc.getString("nombre");
-                                                Log.d("NOMBRE", "NOMBRE DE CIUDAD: " + nombreCiudad);
-                                                String descripcion = cityDoc.getString("descripcion");
-                                                Log.d("DESCRIPCION", "DESCRIPCION DE CIUDAD: " + descripcion);
-                                                String imagenUrl = cityDoc.getString("imagen");
-
-                                                Ciudad ciudad = new Ciudad(nombreCiudad, descripcion, imagenUrl);
-                                                listaCiudades.add(ciudad);
-                                            }
-
-                                            if (adaptadorCiudades == null) {
-                                                adaptadorCiudades = new AdaptadorCiudades(listaCiudades);
-                                                recyclerViewCiudades.setAdapter(adaptadorCiudades);
-                                            } else {
-                                                adaptadorCiudades.notifyDataSetChanged();
-                                            }
-                                        } else {
-                                            Log.e("CityFragment", "Error al obtener ciudades.", cityTask.getException());
-                                        }
-                                    });
-                        }
-                    } else {
-                        Log.e("CityFragment", "País no encontrado.", task.getException());
-                    }
-                });
-    }
 
 
     /**

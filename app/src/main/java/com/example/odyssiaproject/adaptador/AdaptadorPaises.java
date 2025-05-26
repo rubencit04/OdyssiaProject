@@ -102,39 +102,30 @@ public class AdaptadorPaises extends RecyclerView.Adapter<AdaptadorPaises.ViewHo
         // Carga la imagen usando Glide.
         // ⚠️ Nota: Se utiliza paisActual.getNombre() en lugar de imagenPaisesUrl, lo que podría ser un error.
         Glide.with(holder.itemView.getContext())
-                .load(paisActual.getNombre())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)  // Usa almacenamiento en caché en disco.
-                .skipMemoryCache(true)  // Evita el uso de caché en memoria.
+                .load(imagenPaisesUrl)  // aquí usas la URL que obtuviste
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .skipMemoryCache(true)
                 .into(holder.imagenPais);
 
         // Establece un listener para manejar clics en la imagen del país.
         holder.imagenPais.setOnClickListener(v -> {
-            // Verifica la posición del elemento.
             int pos = holder.getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
                 Pais paisClick = listaPais.get(pos);
 
-                // 1. Crea un nuevo CityFragment.
-                CityFragment cityFragment = new CityFragment();
+                // Usamos el método newInstance, pasando null como nombre de ciudad (aún no seleccionada)
+                // y el nombre del país para que CityFragment lo reciba correctamente.
+                CityFragment cityFragment = CityFragment.newInstance(null, paisClick.getNombre());
 
-                // 2. Prepara los argumentos: se envía el atributo "imagen" del país.
-                Bundle args = new Bundle();
-                args.putString("pais", paisClick.getImagen());
-                cityFragment.setArguments(args);
-
-                // 3. Obtiene el contexto y verifica que sea una instancia de AppCompatActivity.
                 Context context = v.getContext();
                 if (context instanceof AppCompatActivity) {
                     AppCompatActivity activity = (AppCompatActivity) context;
 
-                    // Validación para evitar crashes: comprueba que la actividad no esté finalizando
-                    // y que el estado del FragmentManager no esté guardado.
                     if (!activity.isFinishing() && !activity.getSupportFragmentManager().isStateSaved()) {
-                        // Realiza la transacción para reemplazar el fragmento actual por CityFragment.
                         activity.getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_container, cityFragment)
-                                .addToBackStack(null)  // Permite volver atrás con el botón "Back".
+                                .addToBackStack(null)
                                 .commit();
                     }
                 }
