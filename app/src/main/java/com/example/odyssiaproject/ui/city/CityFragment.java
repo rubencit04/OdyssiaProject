@@ -45,8 +45,6 @@ public class CityFragment extends Fragment {
 
     private ApiRenderService apiRenderService;
 
-    // Cambiar esto: elimina DaoPromociones daoPromociones;
-    // Añadir gestor de promociones
     private GestorPromociones gestorPromociones;
 
     private PromocionesAutoScroller controladorScrollPromociones;

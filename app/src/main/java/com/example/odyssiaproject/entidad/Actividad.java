@@ -1,6 +1,11 @@
 package com.example.odyssiaproject.entidad;
 
 public class Actividad {
+
+    public Actividad(String nombre) {
+        this.nombre = nombre;
+    }
+
     private String nombre, horario;
     private String precio;
     private Direccion direccion;

@@ -67,18 +67,20 @@
                         android:gravity="center"
                         android:textSize="14sp"
                         android:textColor="#AAAAAA"
-                        android:layout_marginBottom="20dp"/>
+                        android:layout_marginBottom="24dp"/>
 
                     <!-- Campo E-mail -->
                     <EditText
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:hint="@string/v2_email"
-                        android:fontFamily="@font/antic"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
                         android:textStyle="bold"
                         android:inputType="textEmailAddress"
-                        android:padding="16dp"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
+                        android:hint="@string/v2_email"
+                        android:fontFamily="@font/antic"
                         android:background="@drawable/edittext"
                         android:layout_marginBottom="40dp" />
 

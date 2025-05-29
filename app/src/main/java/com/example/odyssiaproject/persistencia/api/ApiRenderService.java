@@ -1,8 +1,13 @@
 package com.example.odyssiaproject.persistencia.api;
 
+
 import com.example.odyssiaproject.dto.ActividadDTO;
 import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.dto.VueloDTO;
+
+
+import com.example.odyssiaproject.entidad.Actividad;
+
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.entidad.Promociones;
 
