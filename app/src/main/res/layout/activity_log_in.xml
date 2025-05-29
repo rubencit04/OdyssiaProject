@@ -42,12 +42,13 @@
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
+                android:minHeight="56dp"
                 android:hint="@string/v2_email"
                 android:fontFamily="@font/antic"
                 android:textStyle="bold"
                 android:inputType="textEmailAddress"
-                android:padding="12dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
                 android:background="@drawable/edittext"
                 android:layout_marginBottom="12dp" />
 
@@ -55,44 +56,49 @@
                 android:id="@+id/etContrasenia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
+                android:minHeight="56dp"
                 android:hint="@string/v2_contrasenia"
                 android:fontFamily="@font/antic"
                 android:textStyle="bold"
                 android:inputType="textPassword"
-                android:padding="12dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
                 android:background="@drawable/edittext"
                 android:layout_marginBottom="12dp" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="12dp">
 
                 <Button
                     android:id="@+id/btnRecuperacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/v2_btnRecover"
                     android:fontFamily="@font/antic"
-                    android:textStyle="bold"
+                    android:text="@string/v2_btnRecover"
                     android:textColor="#5294FF"
                     android:textSize="14sp"
-                    android:paddingLeft="10dp"/>
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
                 <Button
                     android:id="@+id/btnRegistro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/v2_btnRegister"
                     android:fontFamily="@font/antic"
-                    android:textStyle="bold"
+                    android:text="@string/v2_btnRegister"
                     android:textColor="#5294FF"
                     android:textSize="14sp"
-                    android:paddingRight="10dp"
-                    android:layout_marginLeft="90dp"/>
-            </LinearLayout>
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <Button
                 android:id="@+id/btnIniciar"
@@ -106,7 +112,7 @@
                 android:textColor="#FFFFFF"
                 app:backgroundTint="@null"
                 android:background="@drawable/button_bluegradient"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -116,7 +122,7 @@
                 android:textStyle="bold"
                 android:textSize="14sp"
                 android:textColor="#888888"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="12dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

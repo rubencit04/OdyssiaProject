@@ -9,13 +9,30 @@
     android:layout_margin="6dp"
     android:background="?android:attr/selectableItemBackground">
 
-    <ImageButton
-        android:id="@+id/imageExploration"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:contentDescription="exploration buttons"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/imageExploration"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="exploration buttons"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+
+        <TextView
+            android:id="@+id/textNombreActividad"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:text="fhdkjfkslflkdfjlsdkjf"
+            android:textSize="18sp"
+            android:textColor="#000" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

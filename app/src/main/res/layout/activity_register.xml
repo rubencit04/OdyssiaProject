@@ -62,11 +62,13 @@
                     <EditText
                         android:id="@+id/etUsuario"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
                         android:hint="@string/v2_usuario"
                         android:fontFamily="@font/antic"
                         android:textStyle="bold"
-                        android:padding="16dp"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
                         android:background="@drawable/edittext"
                         android:layout_marginBottom="16dp" />
 
@@ -74,12 +76,14 @@
                     <EditText
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
                         android:hint="@string/v2_email"
+                        android:inputType="textEmailAddress"
                         android:fontFamily="@font/antic"
                         android:textStyle="bold"
-                        android:inputType="textEmailAddress"
-                        android:padding="16dp"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
                         android:background="@drawable/edittext"
                         android:layout_marginBottom="16dp" />
 
@@ -87,12 +91,14 @@
                     <EditText
                         android:id="@+id/etContrasenia"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
                         android:hint="@string/v2_contrasenia"
                         android:fontFamily="@font/antic"
                         android:textStyle="bold"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
                         android:inputType="textPassword"
-                        android:padding="16dp"
                         android:background="@drawable/edittext"
                         android:layout_marginBottom="16dp" />
 
@@ -100,11 +106,13 @@
                     <EditText
                         android:id="@+id/etNacionalidad"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="56dp"
                         android:hint="@string/v2_nacionalidad"
                         android:fontFamily="@font/antic"
                         android:textStyle="bold"
-                        android:padding="16dp"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
                         android:background="@drawable/edittext"
                         android:layout_marginBottom="16dp" />
 

@@ -1,6 +1,7 @@
 package com.example.odyssiaproject.persistencia.api;
 
 
+import com.example.odyssiaproject.entidad.Actividad;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.entidad.Monumentos;
 import com.example.odyssiaproject.entidad.Pais;
@@ -34,6 +35,12 @@ public interface ApiRenderService {
 
     @GET("/promociones")
     Call<List<Promociones>> getPromocionesPorPais(@Query("pais") String nombrePais); // Filtrar por país
+
+    @GET("/actividad")
+    Call<List<Actividad>> getActividad();
+
+    @GET("/actividad")
+    Call<List<Actividad>> getActividadPorCiudad(@Query("ciudad") String nombreCiudad); // Filtrar por ciudad
 
 
 }
