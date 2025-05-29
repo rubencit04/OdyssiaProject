@@ -132,7 +132,7 @@ public class CityFragment extends Fragment {
 
                 // Cargar ciudades del país con Retrofit
                 apiRenderService = RetrofitRenderClient.getApiService();
-                apiRenderService.getCiudadesPorPais(pais.getNombre()).enqueue(new Callback<List<Ciudad>>() {
+                apiRenderService.getCiudades(pais.getNombre()).enqueue(new Callback<List<Ciudad>>() {
                     @Override
                     public void onResponse(Call<List<Ciudad>> call, Response<List<Ciudad>> response) {
                         if (response.isSuccessful() && response.body() != null) {

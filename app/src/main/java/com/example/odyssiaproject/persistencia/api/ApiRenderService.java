@@ -1,6 +1,5 @@
 package com.example.odyssiaproject.persistencia.api;
 
-
 import com.example.odyssiaproject.dto.ActividadDTO;
 import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.dto.VueloDTO;
@@ -19,29 +18,32 @@ public interface ApiRenderService {
     Call<List<PaisDTO>> getPaises();
 
     @GET("/ciudades")
-    Call<List<Ciudad>> getCiudades();
-
-    @GET("/ciudades")
-    Call<List<Ciudad>> getCiudadesPorPais(@Query("pais") String nombrePais); // Filtrar por país
-
+    Call<List<Ciudad>> getCiudades(@Query("pais") String pais);
 
     @GET("/promociones")
-    Call<List<Promociones>> getPromociones();
-
-    @GET("/promociones")
-    Call<List<Promociones>> getPromocionesPorPais(@Query("pais") String nombrePais); // Filtrar por país
+    Call<List<Promociones>> getPromociones(@Query("pais") String pais);
 
     @GET("/vuelos")
-    Call<List<VueloDTO>> getVuelos(
-            @Query("paisOrigen") String paisOrigen,
-            @Query("paisDestino") String paisDestino
-    );
-    @GET("/restaurante")
-    Call<List<ActividadDTO>> getActividades(
-            @Query("ciudad") String ciudad,
-            @Query("pais") String pais
-    );
+    Call<List<VueloDTO>> getVuelos(@Query("ciudad") String ciudad, @Query("pais") String pais);
 
+    @GET("/actividades")
+    Call<List<ActividadDTO>> getActividades(@Query("ciudad") String ciudad, @Query("pais") String pais);
 
+    @GET("/alojamientos")
+    Call<List<ActividadDTO>> getAlojamientos(@Query("ciudad") String ciudad, @Query("pais") String pais);
 
+    @GET("/cultura")
+    Call<List<ActividadDTO>> getCultura(@Query("ciudad") String ciudad, @Query("pais") String pais);
+
+    @GET("/monumentos")
+    Call<List<ActividadDTO>> getMonumentos(@Query("ciudad") String ciudad, @Query("pais") String pais);
+
+    @GET("/ocio")
+    Call<List<ActividadDTO>> getOcio(@Query("ciudad") String ciudad, @Query("pais") String pais);
+
+    @GET("/ocionocturno")
+    Call<List<ActividadDTO>> getOcioNocturno(@Query("ciudad") String ciudad, @Query("pais") String pais);
+
+    @GET("/restaurantes")
+    Call<List<ActividadDTO>> getRestaurantes(@Query("ciudad") String ciudad, @Query("pais") String pais);
 }

@@ -10,11 +10,11 @@ public class DaoPromocion {
 
     // Obtiene todas las promociones sin filtro
     public Call<List<Promociones>> obtenerPromociones() {
-        return RetrofitRenderClient.getApiService().getPromociones();
+        return RetrofitRenderClient.getApiService().getPromociones(null);
     }
 
     // Obtiene promociones filtradas por país
     public Call<List<Promociones>> obtenerPromocionesPorPais(String pais) {
-        return RetrofitRenderClient.getApiService().getPromocionesPorPais(pais);
+        return RetrofitRenderClient.getApiService().getPromociones(pais);
     }
 }
