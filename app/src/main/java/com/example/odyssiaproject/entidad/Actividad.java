@@ -6,6 +6,9 @@ public class Actividad {
     private Direccion direccion;
     private Ciudad ciudad;
 
+    private String link;
+    private String imagen;
+
     public String getNombre() {
         return nombre;
     }
@@ -47,14 +50,32 @@ public class Actividad {
         this.ciudad = ciudad;
     }
 
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+
     @Override
     public String toString() {
         return "Actividad{" +
                 "nombre='" + nombre + '\'' +
                 ", horario='" + horario + '\'' +
-                ", precio=" + precio +
+                ", precio='" + precio + '\'' +
                 ", direccion=" + direccion +
                 ", ciudad=" + ciudad +
+                ", link='" + link + '\'' +
+                ", imagen='" + imagen + '\'' +
                 '}';
     }
 }

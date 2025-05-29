@@ -9,6 +9,8 @@ public class Pais {
     private String nombre;
     private String imagen;
 
+    private List<Promociones> listaPromociones;
+
     public String getId() {
         return id;
     }
@@ -49,13 +51,23 @@ public class Pais {
 
     public Pais() {
     }
+
+    public List<Promociones> getListaPromociones() {
+        return listaPromociones;
+    }
+
+    public void setListaPromociones(List<Promociones> listaPromociones) {
+        this.listaPromociones = listaPromociones;
+    }
+
     @Override
     public String toString() {
         return "Pais{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", listaCiudades=" + listaCiudades +
                 ", nombre='" + nombre + '\'' +
                 ", imagen='" + imagen + '\'' +
+                ", listaPromociones=" + listaPromociones +
                 '}';
     }
 }

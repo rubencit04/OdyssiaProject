@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.adaptador.AdaptadorPaises;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
-import com.example.odyssiaproject.entidad.Pais;
+import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.entidad.Promociones;
 import com.example.odyssiaproject.negocio.GestorPromociones;
 import com.example.odyssiaproject.persistencia.api.ApiRenderService;
@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerViewPromociones;
     private RecyclerView recyclerViewPaises;
-    private List<Pais> listaPaises = new ArrayList<>();
+    private List<PaisDTO> listaPaises = new ArrayList<>();
     private AdaptadorPromociones adaptadorPromociones;
     private AdaptadorPaises adaptadorPaises;
 
@@ -118,9 +118,9 @@ public class HomeFragment extends Fragment {
 
         // Cargar países desde API directamente (puedes también hacer un gestor si quieres)
         apiRenderService = RetrofitRenderClient.getApiService();
-        apiRenderService.getPaises().enqueue(new Callback<List<Pais>>() {
+        apiRenderService.getPaises().enqueue(new Callback<List<PaisDTO>>() {
             @Override
-            public void onResponse(Call<List<Pais>> call, Response<List<Pais>> response) {
+            public void onResponse(Call<List<PaisDTO>> call, Response<List<PaisDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     listaPaises = response.body();
                     adaptadorPaises = new AdaptadorPaises(listaPaises);
@@ -131,7 +131,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Pais>> call, Throwable t) {
+            public void onFailure(Call<List<PaisDTO>> call, Throwable t) {
                 Log.e("HomeFragment", "Fallo al obtener países", t);
             }
         });

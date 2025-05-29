@@ -1,6 +1,6 @@
 package com.example.odyssiaproject.negocio;
 
-import com.example.odyssiaproject.entidad.Pais;
+import com.example.odyssiaproject.dto.PaisDTO;
 
 
 public class GestorPaises {
@@ -11,7 +11,7 @@ public class GestorPaises {
      * @param pais Objeto Pais con al menos el nombre.
      * @return URL de la imagen o valor por defecto si no se encuentra.
      */
-    public String imagenPaises(Pais pais) {
+    public String imagenPaises(PaisDTO pais) {
         if (pais == null || pais.getImagen() == null || pais.getImagen().isEmpty()) {
             return "https://ejemplo.com/default.jpg"; // URL por defecto
         }

@@ -1,8 +1,6 @@
 package com.example.odyssiaproject.adaptador;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
+import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.negocio.GestorPaises;
 import com.example.odyssiaproject.ui.city.CityFragment;
@@ -31,7 +30,7 @@ import java.util.List;
 public class AdaptadorPaises extends RecyclerView.Adapter<AdaptadorPaises.ViewHolder> {
 
     // Lista de países a mostrar.
-    private List<Pais> listaPais;
+    private List<PaisDTO> listaPais;
     // Gestor para operaciones relacionadas con países, utilizado para obtener la URL de la imagen.
     private GestorPaises gestorPaises;
 
@@ -40,7 +39,7 @@ public class AdaptadorPaises extends RecyclerView.Adapter<AdaptadorPaises.ViewHo
      *
      * @param listaPaises Lista de objetos Pais que se mostrarán en el RecyclerView.
      */
-    public AdaptadorPaises(List<Pais> listaPaises) {
+    public AdaptadorPaises(List<PaisDTO> listaPaises) {
         this.listaPais = listaPaises;
         this.gestorPaises = new GestorPaises();
     }
@@ -88,7 +87,7 @@ public class AdaptadorPaises extends RecyclerView.Adapter<AdaptadorPaises.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Obtiene el país correspondiente a la posición actual.
-        Pais paisActual = listaPais.get(position);
+        PaisDTO paisActual = listaPais.get(position);
 
         // Intenta obtener la URL de la imagen del país utilizando el GestorPaises.
         String imagenPaisesUrl = gestorPaises.imagenPaises(paisActual);
@@ -103,7 +102,7 @@ public class AdaptadorPaises extends RecyclerView.Adapter<AdaptadorPaises.ViewHo
         holder.imagenPais.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
-                Pais paisClick = listaPais.get(pos);
+                PaisDTO paisClick = listaPais.get(pos);
 
                 // Usamos el método newInstance, pasando null como nombre de ciudad (aún no seleccionada)
                 // y el nombre del país para que CityFragment lo reciba correctamente.

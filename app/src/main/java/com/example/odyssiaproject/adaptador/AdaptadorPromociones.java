@@ -24,7 +24,7 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
     private List<Promociones> listaPromociones = new ArrayList<>();
     private GestorPromociones gestorPromociones = new GestorPromociones();
 
-    public AdaptadorPromociones(List<Promociones> listaPromociones) {
+    public AdaptadorPromociones(ArrayList<Promociones> listaPromociones) {
         this.listaPromociones = listaPromociones;
     }
 
@@ -58,7 +58,7 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
         if (listaPromociones != null && !listaPromociones.isEmpty()) {
 
             int realPos = position % listaPromociones.size();
-            Promociones  p = listaPromociones.get(realPos);
+            Promociones p = listaPromociones.get(realPos);
 
             String urlImagen = gestorPromociones.imagenPromocion(p);
             Glide.with(holder.itemView.getContext())

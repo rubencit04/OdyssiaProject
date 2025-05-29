@@ -22,7 +22,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.negocio.GestorCiudades;
-import com.example.odyssiaproject.negocio.GestorPaises;
 import com.example.odyssiaproject.ui.option.OptionFragment;
 
 import java.util.List;
