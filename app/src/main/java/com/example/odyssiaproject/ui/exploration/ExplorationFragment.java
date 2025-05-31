@@ -28,6 +28,9 @@ public class ExplorationFragment extends Fragment {
 
     private RecyclerView rwExploration, rwPromotions;
 
+    private static final String ARG_CIUDAD = "ciudad";
+    private String ciudad;
+
     private ApiRenderService apiRenderService;
 
     private AdaptadorExploracion adaptadorExploracion;
@@ -44,10 +47,20 @@ public class ExplorationFragment extends Fragment {
 
     public ExplorationFragment() {}
 
+    public static ExplorationFragment newInstance(String ciudad) {
+        ExplorationFragment explorationFragment = new ExplorationFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_CIUDAD, ciudad);
+        explorationFragment.setArguments(args);
+        return explorationFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() != null) {
+            ciudad = getArguments().getString(ARG_CIUDAD);
+        }
         gestorPromociones = new GestorPromociones();
 
     }
@@ -92,30 +105,27 @@ public class ExplorationFragment extends Fragment {
             }
         });
 
-        // Configuración RecyclerView países (vertical)
+        // Configuración RecyclerView Exploración (vertical)
         rwExploration = root.findViewById(R.id.rwExploration);
         rwExploration.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         rwExploration.setHasFixedSize(true);
 
-        // Cargar actividades desde drawable directamente
-        private List<Actividad> cargarActividadLocal() {
-
-            List<Actividad> actividades = new ArrayList<>();
-            actividades.add(new Actividad("Ocio Nocturno"));
-            actividades.add(new Actividad("Ocio Diurno"));
-            actividades.add(new Actividad("Restaurantes"));
-            actividades.add(new Actividad("Cultura"));
-            actividades.add(new Actividad("Vuelos"));
-            actividades.add(new Actividad("Monumentos"));
-            return actividades;
-        }
-
         List<Actividad> listaActividades = cargarActividadLocal();
-
         adaptadorExploracion = new AdaptadorExploracion(listaActividades);
         rwExploration.setAdapter(adaptadorExploracion);
 
         return root;
+    }
+
+    private List<Actividad> cargarActividadLocal() {
+        List<Actividad> actividades = new ArrayList<>();
+        actividades.add(new Actividad("Ocio Nocturno"));
+        actividades.add(new Actividad("Ocio Diurno"));
+        actividades.add(new Actividad("Restaurantes"));
+        actividades.add(new Actividad("Cultura"));
+        actividades.add(new Actividad("Vuelos"));
+        actividades.add(new Actividad("Monumentos"));
+        return actividades;
     }
 
     @Override

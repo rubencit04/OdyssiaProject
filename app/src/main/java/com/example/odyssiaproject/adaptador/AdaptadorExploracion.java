@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,6 +71,7 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageButton ibEsploration;
+        private TextView textNombreActividad;
 
         /**
          * Constructor del ViewHolder.
@@ -79,6 +81,7 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
         public ViewHolder(View v) {
             super(v);
             ibEsploration = v.findViewById(R.id.imageExploration);
+            textNombreActividad = v.findViewById(R.id.textNombreActividad);
         }
     }
 }

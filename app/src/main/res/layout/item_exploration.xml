@@ -3,36 +3,40 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="150dp"
-    android:layout_height="150dp"
-    android:orientation="vertical"
+    android:layout_height="200dp"
     card_view:cardCornerRadius="15dp"
     android:layout_margin="6dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="0dp">
 
         <ImageButton
             android:id="@+id/imageExploration"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="exploration buttons"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
-            android:adjustViewBounds="true"/>
+            android:background="@null"
+            android:contentDescription="boton de exploracion"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:cropToPadding="false" />
 
         <TextView
             android:id="@+id/textNombreActividad"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:text="fhdkjfkslflkdfjlsdkjf"
-            android:textSize="18sp"
-            android:textColor="#000" />
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:text="Nombre Actividad"
+            android:textSize="14sp"
+            android:layout_marginTop="20dp"
+            android:textColor="@android:color/holo_blue_light"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
