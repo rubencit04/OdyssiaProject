@@ -91,7 +91,8 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
 
     @Override
     public int getItemCount() {
-        return Integer.MAX_VALUE;
+        return (listaPromociones != null && !listaPromociones.isEmpty()) ? Integer.MAX_VALUE : 0;
     }
+
 
 }

@@ -1,5 +1,8 @@
 package com.example.odyssiaproject.adaptador;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Actividad;
-import com.example.odyssiaproject.ui.option.OptionFragment;
+import com.example.odyssiaproject.entidad.Ciudad;
+import com.example.odyssiaproject.ui.exploration.ExplorationFragment;
 
 import java.util.List;
 
 public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExploracion.ViewHolder> {
 
-    public List<Actividad> listaActividad;
+    private List<Actividad> actividades;
+    private List<Integer> imagenesDrawable;
+    private List<Integer> nombresStringId;
 
-    public AdaptadorExploracion(List<Actividad> listaActividad) {
-        this.listaActividad = listaActividad;
+    public AdaptadorExploracion(List<Actividad> actividades, List<Integer> imagenesDrawable, List<Integer> nombresStringId) {
+        this.actividades = actividades;
+        this.imagenesDrawable = imagenesDrawable;
+        this.nombresStringId = nombresStringId;
     }
 
     @NonNull
@@ -33,44 +41,33 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdaptadorExploracion.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Actividad actividad = actividades.get(position);
+        int imagenResId = imagenesDrawable.get(position);
+        int textoResId = nombresStringId.get(position);
 
-        Actividad actividad = listaActividad.get(position);
+        holder.imageExploration.setImageResource(imagenResId);
+        holder.textNombreActividad.setText(textoResId);
 
-        holder.textNombreActividad.setText(actividad.getNombre());
-
-        String nombreImagen = actividad.getNombre().toLowerCase().replace(" ", "_");
-        int idImagen = holder.ibEsploration.getContext().getResources().getIdentifier(
-                nombreImagen, "drawable", holder.ibEsploration.getContext().getPackageName()
-        );
-
-        if (idImagen != 0) {
-            holder.ibEsploration.setImageResource(idImagen);
-        } else {
-            holder.ibEsploration.setImageResource(R.drawable.button_bluegradient);
-        }
-
-        holder.ibEsploration.setOnClickListener(v -> {
-
+        holder.imageExploration.setOnClickListener(v -> {
             AppCompatActivity activity = (AppCompatActivity) v.getContext();
+            String ciudad = actividad.getCiudad().getNombre();
+            String pais = actividad.getCiudad().getPais(); // Asumiendo getter anidado
 
-            OptionFragment optionFragment = OptionFragment.newInstance(actividad.getNombre());
-
+            ExplorationFragment fragment = ExplorationFragment.newInstance(pais, ciudad);
             activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, optionFragment)
+                    .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)
                     .commit();
-
         });
-
     }
 
     @Override
-    public int getItemCount() { return listaActividad.size(); }
+    public int getItemCount() { return actividades.size(); }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageButton ibEsploration;
+        private ImageButton imageExploration;
         private TextView textNombreActividad;
 
         /**
@@ -80,7 +77,7 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
          */
         public ViewHolder(View v) {
             super(v);
-            ibEsploration = v.findViewById(R.id.imageExploration);
+            imageExploration = v.findViewById(R.id.imageExploration);
             textNombreActividad = v.findViewById(R.id.textNombreActividad);
         }
     }

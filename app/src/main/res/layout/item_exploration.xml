@@ -31,9 +31,11 @@
             android:layout_width="150dp"
             android:layout_height="30dp"
             android:text="Nombre Actividad"
+            android:fontFamily="@font/antic"
+            android:textStyle="bold"
             android:textSize="14sp"
-            android:layout_marginTop="20dp"
-            android:textColor="@android:color/holo_blue_light"
+            android:layout_marginTop="12dp"
+            android:textColor="#5294FF"
             android:gravity="center"
             android:maxLines="1"
             android:ellipsize="end" />

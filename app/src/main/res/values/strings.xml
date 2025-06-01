@@ -60,5 +60,14 @@
     <string name="v2_dialog_cambioPass">Cambio de Contraseña</string>
     <string name="v2_btnConfirmar">Confirmar</string>
     <string name="v2_btnCancelar">Cancelar</string>
+    <string name="v2_btnAbrir">Abrir</string>
+
+    <!-- Explroacion -->
+    <string name="titulo_ocio_nocturno">Ocio Nocturno</string>
+    <string name="titulo_ocio_diurno">Ocio Diurno</string>
+    <string name="titulo_restaurantes">Restaurantes</string>
+    <string name="titulo_cultura">Cultura</string>
+    <string name="titulo_vuelos">Alojamientos</string>
+    <string name="titulo_monumentos">Monumentos</string>
 
 </resources>

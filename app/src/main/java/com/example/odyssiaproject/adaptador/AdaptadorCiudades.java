@@ -22,7 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.negocio.GestorCiudades;
-import com.example.odyssiaproject.ui.option.OptionFragment;
+import com.example.odyssiaproject.ui.exploration.ExplorationFragment;
 
 import java.util.List;
 
@@ -92,28 +92,6 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
         holder.nombreCiudad.setText(ciudadActual.getNombre());
         holder.descripcionCiudad.setText(ciudadActual.getDescripcion());
 
-        // Configura el botón "abrir" para crear y mostrar el fragmento con opciones de la ciudad.
-        holder.abrir.setOnClickListener(v -> {
-            int pos = holder.getAdapterPosition();
-            if (pos != RecyclerView.NO_POSITION) {
-                Ciudad ciudadClick = listaCiudades.get(pos);
-
-                Context context = v.getContext();
-                while (!(context instanceof AppCompatActivity) && context instanceof ContextWrapper) {
-                    context = ((ContextWrapper) context).getBaseContext();
-                }
-                AppCompatActivity activity = (AppCompatActivity) context;
-
-                OptionFragment optionFragment = OptionFragment.newInstance(ciudadClick.getNombre());
-
-                activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, optionFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
-        // Configura el gesto de doble toque en el botón "like".
         holder.like.setOnTouchListener(new View.OnTouchListener() {
             // Se utiliza un GestureDetector para detectar el doble toque.
             private final GestureDetector gestureDetector = new GestureDetector(holder.itemView.getContext(),
@@ -130,6 +108,31 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
             public boolean onTouch(View v, MotionEvent event) {
                 // Delegar el evento de toque al GestureDetector.
                 return gestureDetector.onTouchEvent(event);
+            }
+        });
+
+        holder.abrir.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                Ciudad ciudadClick = listaCiudades.get(pos);
+
+                String nombreCiudad = ciudadClick.getNombre();
+                String nombrePais = ciudadClick.getPais();
+
+                Log.d("AdaptadorCiudades", "Mandando a fragmento: Ciudad=" + nombreCiudad + ", País=" + nombrePais);
+
+                Context context = v.getContext();
+                while (!(context instanceof AppCompatActivity) && context instanceof ContextWrapper) {
+                    context = ((ContextWrapper) context).getBaseContext();
+                }
+                AppCompatActivity activity = (AppCompatActivity) context;
+
+                ExplorationFragment explorationFragment = ExplorationFragment.newInstance(nombrePais, nombreCiudad);
+
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, explorationFragment)
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }
