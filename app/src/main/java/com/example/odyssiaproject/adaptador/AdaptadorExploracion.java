@@ -2,6 +2,7 @@ package com.example.odyssiaproject.adaptador;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,18 +51,19 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
         holder.imageExploration.setOnClickListener(v -> {
             int pos = holder.getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
-                Actividad actividadClick = actividades.get(pos);
-
-                String ciudad = actividadClick.getCiudad().getNombre();
-                String nombreActividad = actividadClick.getNombre();
-
                 Context context = v.getContext();
+                String nombreActividad = context.getString(nombresStringId.get(pos));
+                String ciudad = actividades.get(pos).getCiudad().getNombre();
+
+                // Asumiendo que OptionFragment acepta estos parámetros:
+                OptionFragment optionFragment = OptionFragment.newInstance(ciudad, nombreActividad);
+
+                // Para obtener AppCompatActivity:
                 while (!(context instanceof AppCompatActivity) && context instanceof ContextWrapper) {
                     context = ((ContextWrapper) context).getBaseContext();
                 }
                 AppCompatActivity activity = (AppCompatActivity) context;
 
-                OptionFragment optionFragment = OptionFragment.newInstance(ciudad, nombreActividad);
                 activity.getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, optionFragment)
                         .addToBackStack(null)

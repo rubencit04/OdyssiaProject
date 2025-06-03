@@ -1,7 +1,6 @@
 package com.example.odyssiaproject.negocio;
 
-import com.example.odyssiaproject.entidad.Actividad;
-import com.example.odyssiaproject.entidad.Monumentos;
+import com.example.odyssiaproject.dto.ActividadDTO;
 
 public class GestorOptions {
 
@@ -12,7 +11,7 @@ public class GestorOptions {
      * @param actividad Objeto Monumentos
      * @return URL o nombre de la imagen
      */
-    public String imagenMonumento(Actividad actividad) {
+    public String imagenOption(ActividadDTO actividad) {
         if (actividad == null || actividad.getImagen() == null || actividad.getImagen().isEmpty()) {
             return "https://ejemplo.com/default.jpg"; // imagen por defecto
         }

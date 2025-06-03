@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
+import com.example.odyssiaproject.dto.ActividadDTO;
 import com.example.odyssiaproject.entidad.Actividad;
 import com.example.odyssiaproject.negocio.GestorOptions;
 import com.example.odyssiaproject.ui.option.OptionFragment;
@@ -33,26 +34,22 @@ import java.util.List;
 public class AdaptadorOption extends RecyclerView.Adapter<AdaptadorOption.ViewHolder> {
 
     private Context context;
-    private List<Actividad> actividadesFiltradas;
-    private String tipoSeleccionado;
+    private List<ActividadDTO> actividades;
     private OnItemClickListener listener;
 
     private GestorOptions gestor;
 
     public interface OnItemClickListener {
-        void onAbrirClick(Actividad actividad);
+        void onAbrirClick(ActividadDTO actividad);
     }
 
-    public AdaptadorOption(List<Actividad> actividades) {
-        this.actividadesFiltradas = new ArrayList<>();
-
-        // Filtrar por tipo
-        for (Actividad actividad : actividades) {
-            if (actividad.getNombre().equalsIgnoreCase(tipoSeleccionado)) {
-                actividadesFiltradas.add(actividad);
-            }
-        }
+    public AdaptadorOption(Context context, List<ActividadDTO> actividades) {
+        this.context = context;
+        this.actividades = actividades;
+        this.gestor = new GestorOptions();
     }
+
+
 
     @NonNull
     @Override
@@ -64,9 +61,9 @@ public class AdaptadorOption extends RecyclerView.Adapter<AdaptadorOption.ViewHo
     @Override
     public void onBindViewHolder(@NonNull AdaptadorOption.ViewHolder holder, int position) {
 
-        Actividad actividadActual = actividadesFiltradas.get(position);
+        ActividadDTO actividadActual = actividades.get(position);
 
-        String imagenActividadUrl = gestor.imagenMonumento(actividadActual);
+        String imagenActividadUrl = gestor.imagenOption(actividadActual);
 
         // Carga la imagen en el ImageView utilizando Glide.
         Glide.with(holder.itemView.getContext())
@@ -82,7 +79,7 @@ public class AdaptadorOption extends RecyclerView.Adapter<AdaptadorOption.ViewHo
 
     @Override
     public int getItemCount() {
-        return actividadesFiltradas.size();
+        return actividades.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

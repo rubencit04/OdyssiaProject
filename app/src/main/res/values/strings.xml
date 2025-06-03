@@ -64,7 +64,7 @@
 
     <!-- Explroacion -->
     <string name="titulo_ocio_nocturno">Ocio Nocturno</string>
-    <string name="titulo_ocio_diurno">Ocio Diurno</string>
+    <string name="titulo_ocio">Ocio</string>
     <string name="titulo_restaurantes">Restaurantes</string>
     <string name="titulo_cultura">Cultura</string>
     <string name="titulo_vuelos">Alojamientos</string>

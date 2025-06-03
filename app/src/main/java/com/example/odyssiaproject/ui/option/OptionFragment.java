@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.adaptador.AdaptadorOption;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
+import com.example.odyssiaproject.dto.ActividadDTO;
 import com.example.odyssiaproject.entidad.Actividad;
 import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.entidad.Promociones;
@@ -36,11 +37,14 @@ public class OptionFragment extends Fragment {
     private RecyclerView recyclerViewPromociones;
     private RecyclerView recyclerViewOptions;
 
-    private List<Actividad> listaActividades = new ArrayList<>();
+    private List<ActividadDTO> listaActividades = new ArrayList<>();
     private AdaptadorPromociones adaptadorPromociones;
     private AdaptadorOption adaptadorActividades;
 
     private static final String ARG_NOMBRE_CIUDAD = "ciudad";
+    private static final String ARG_NOMBRE_ACTIVIDAD = "actividad";
+    private String nombreCiudad;
+    private String nombreActividad;
 
     private GestorPromociones gestorPromociones;
 
@@ -55,7 +59,7 @@ public class OptionFragment extends Fragment {
         OptionFragment fragment = new OptionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_NOMBRE_CIUDAD, nombreCiudad);
-        args.putString("actividad", nombreActividad);
+        args.putString(ARG_NOMBRE_ACTIVIDAD, nombreActividad);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,22 +70,21 @@ public class OptionFragment extends Fragment {
 
         // Instanciar el gestor
         gestorPromociones = new GestorPromociones();
-
         if (getArguments() != null) {
-            String nombreCiudad = getArguments().getString(ARG_NOMBRE_CIUDAD);
-            String nombreActividad = getArguments().getString("actividad");
+            nombreCiudad = getArguments().getString(ARG_NOMBRE_CIUDAD);
+            nombreActividad = getArguments().getString(ARG_NOMBRE_ACTIVIDAD);
         }
+
+
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_option, container, false);
 
         recyclerViewOptions = root.findViewById(R.id.rwOptions);
-        recyclerViewOptions.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false));
+        recyclerViewOptions.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewOptions.setHasFixedSize(true);
 
         recyclerViewPromociones = root.findViewById(R.id.rwPromotions);
@@ -118,8 +121,76 @@ public class OptionFragment extends Fragment {
             }
         });
 
+        if (getArguments() != null) {
+            String nombreCiudad = getArguments().getString(ARG_NOMBRE_CIUDAD);
+            String nombreActividad = getArguments().getString(ARG_NOMBRE_ACTIVIDAD);
+
+            cargarActividades(nombreActividad, nombreCiudad, null, recyclerViewOptions);
+        } else {
+            Log.e("OptionFragment", "No se encontraron argumentos");
+        }
+
         return root;
     }
+
+
+    private void cargarActividades(String actividad, String ciudad, String pais, RecyclerView recyclerView) {
+        Log.d("OptionFragment", "cargarActividades con actividad=" + actividad + ", ciudad=" + ciudad);
+        actividad = actividad.toLowerCase().replace("-", " ");
+        ApiRenderService apiService = RetrofitRenderClient.getApiService();
+
+        Call<List<ActividadDTO>> call;
+
+        switch (actividad) {
+            case "alojamientos":
+                call = apiService.getAlojamientos(ciudad, pais);
+                break;
+            case "cultura":
+                call = apiService.getCultura(ciudad, pais);
+                break;
+            case "monumentos":
+                call = apiService.getMonumentos(ciudad, pais);
+                break;
+            case "ocio nocturno":
+                call = apiService.getOcioNocturno(ciudad, pais);
+                break;
+            case "ocio":
+                call = apiService.getOcio(ciudad, pais);
+                break;
+            case "restaurantes":
+                call = apiService.getRestaurantes(ciudad, pais);
+                break;
+            default:
+                Log.e("OptionFragment", "Actividad no reconocida: " + actividad);
+                return;
+        }
+
+        call.enqueue(new Callback<List<ActividadDTO>>() {
+            @Override
+            public void onResponse(Call<List<ActividadDTO>> call, Response<List<ActividadDTO>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<ActividadDTO> todasActividades = response.body();
+                    Log.d("OptionFragment", "Recibidas " + todasActividades.size() + " actividades");
+
+                    listaActividades = todasActividades;
+
+                    adaptadorActividades = new AdaptadorOption(requireContext(), listaActividades);
+                    recyclerView.setAdapter(adaptadorActividades);
+
+                } else {
+                    Log.e("OptionFragment", "Respuesta no exitosa o cuerpo null: " + response.code());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<ActividadDTO>> call, Throwable t) {
+                Log.e("OptionFragment", "Fallo al obtener actividades", t);
+            }
+        });
+    }
+
+
 
     @Override
     public void onDestroyView() {
