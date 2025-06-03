@@ -140,7 +140,7 @@ public class ExplorationFragment extends Fragment {
 
                 List<Integer> nombresStringId = List.of(
                         R.string.titulo_ocio_nocturno,
-                        R.string.titulo_ocio_diurno,
+                        R.string.titulo_ocio,
                         R.string.titulo_restaurantes,
                         R.string.titulo_cultura,
                         R.string.titulo_vuelos,

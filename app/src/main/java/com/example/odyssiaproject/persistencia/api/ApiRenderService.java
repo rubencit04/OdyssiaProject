@@ -46,7 +46,7 @@ public interface ApiRenderService {
     @GET("/ocio")
     Call<List<ActividadDTO>> getOcio(@Query("ciudad") String ciudad, @Query("pais") String pais);
 
-    @GET("/ocionocturno")
+    @GET("/ocio-nocturno")
     Call<List<ActividadDTO>> getOcioNocturno(@Query("ciudad") String ciudad, @Query("pais") String pais);
 
     @GET("/restaurantes")
