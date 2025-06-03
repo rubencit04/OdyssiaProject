@@ -38,7 +38,8 @@ public class LogIn extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser usuario = mAuth.getCurrentUser();
 
-        if (usuario != null) {
+        if
+        (usuario != null) {
             // Oculta la pantalla mientras se verifica
             findViewById(R.id.Login).setVisibility(View.INVISIBLE);
 

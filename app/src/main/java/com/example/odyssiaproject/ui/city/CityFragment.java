@@ -22,9 +22,14 @@ import com.example.odyssiaproject.negocio.GestorPromociones;
 import com.example.odyssiaproject.persistencia.api.ApiRenderService;
 import com.example.odyssiaproject.persistencia.api.RetrofitRenderClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +41,8 @@ public class CityFragment extends Fragment {
     private RecyclerView recyclerViewCiudades;
 
     private List<Ciudad> listaCiudades = new ArrayList<>();
+
+    private Set<String> favoritosCiudades = new HashSet<>();
     private AdaptadorPromociones adaptadorPromociones;
     private AdaptadorCiudades adaptadorCiudades;
 
@@ -52,6 +59,7 @@ public class CityFragment extends Fragment {
     private static final int VELOCIDAD_SCROLL_PX_BASICO = 10;
     private static final long RETRASO_PASO_SCROLL_MS_BASICO = 50;
 
+
     public CityFragment() {}
 
     public static CityFragment newInstance(String nombreCiudad, String nombrePais) {
@@ -67,7 +75,6 @@ public class CityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Instanciar el gestor
         gestorPromociones = new GestorPromociones();
 
         if (getArguments() != null) {
@@ -108,7 +115,6 @@ public class CityFragment extends Fragment {
                 pais.setNombre(nombrePais);
                 Log.d("CityFragment", "País inicializado: " + pais.getNombre());
 
-                // Cambiar la carga de promociones para usar el gestor:
                 gestorPromociones.obtenerPromocionesPorPais(pais.getNombre(), new GestorPromociones.CallbackPromociones() {
                     @Override
                     public void onPromocionesCargadas(List<Promociones> promociones) {
@@ -128,15 +134,14 @@ public class CityFragment extends Fragment {
                     }
                 });
 
-                // Cargar ciudades del país con Retrofit
+                // Obtener ciudades del país
                 apiRenderService = RetrofitRenderClient.getApiService();
                 apiRenderService.getCiudades(pais.getNombre()).enqueue(new Callback<List<Ciudad>>() {
                     @Override
                     public void onResponse(Call<List<Ciudad>> call, Response<List<Ciudad>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             listaCiudades = response.body();
-                            adaptadorCiudades = new AdaptadorCiudades(listaCiudades);
-                            recyclerViewCiudades.setAdapter(adaptadorCiudades);
+                            cargarFavoritosDesdeFirestore(); // ← ahora lo haces aquí
                         } else {
                             Log.e("CityFragment", "Error en la respuesta al obtener ciudades");
                         }
@@ -158,6 +163,35 @@ public class CityFragment extends Fragment {
         return root;
     }
 
+    private void cargarFavoritosDesdeFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            db.collection("usuario").document(user.getUid())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            List<String> favList = (List<String>) documentSnapshot.get("favoritosCiudades");
+                            if (favList != null) {
+                                favoritosCiudades.addAll(favList);
+                            }
+                        }
+                        adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
+                        recyclerViewCiudades.setAdapter(adaptadorCiudades);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "Error cargando favoritos", e);
+                        adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
+                        recyclerViewCiudades.setAdapter(adaptadorCiudades);
+                    });
+        } else {
+            Log.w("Firestore", "Usuario no logueado");
+            adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
+            recyclerViewCiudades.setAdapter(adaptadorCiudades);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -176,16 +210,10 @@ public class CityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.reanudarScroll(); // si implementaste pausa/reanudar
-        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.pausarScroll(); // o detenerScroll()
-        }
     }
 }

@@ -23,90 +23,88 @@ import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.negocio.GestorCiudades;
 import com.example.odyssiaproject.ui.exploration.ExplorationFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-/**
- * AdaptadorCiudades es un adaptador para un RecyclerView que muestra una lista de ciudades.
- * <p>
- * Cada elemento de la lista muestra la imagen, el nombre, la descripción de la ciudad y dos acciones:
- * <ul>
- *     <li>Un botón para abrir un fragmento con detalles o opciones de la ciudad.</li>
- *     <li>Un gesto de doble toque sobre un botón "like" para marcar la ciudad como favorita (se cambia la imagen del botón).</li>
- * </ul>
- */
 public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.ViewHolder> {
 
-    // Lista de objetos Ciudad a mostrar.
     private List<Ciudad> listaCiudades;
-
     private GestorCiudades gestorCiudades;
+    private Set<String> favoritos = new HashSet<>();
 
-    /**
-     * Constructor del adaptador.
-     *
-     * @param listaCiudades Lista de ciudades a mostrar en el RecyclerView.
-     */
-    public AdaptadorCiudades(List<Ciudad> listaCiudades) {
+    public AdaptadorCiudades(List<Ciudad> listaCiudades, Set<String> favoritosCiudades) {
         this.listaCiudades = listaCiudades;
         this.gestorCiudades = new GestorCiudades();
+        this.favoritos = favoritosCiudades;
     }
 
-    /**
-     * Infla la vista para cada elemento del RecyclerView.
-     *
-     * @param parent   El ViewGroup en el que se crea la vista.
-     * @param viewType Tipo de vista, en este caso se usa un único tipo.
-     * @return Un ViewHolder que contiene la vista del elemento.
-     */
+    public void setFavoritos(Set<String> favoritos) {
+        this.favoritos = favoritos;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Infla el layout 'item_cities' para cada elemento.
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cities, parent, false);
         return new ViewHolder(v);
     }
 
-    /**
-     * Asocia los datos de una ciudad a la vista correspondiente.
-     *
-     * @param holder   El ViewHolder que contiene los views del elemento.
-     * @param position La posición del elemento en la lista.
-     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Obtiene la ciudad actual según la posición.
         Ciudad ciudadActual = listaCiudades.get(position);
-
-        // Obtiene la URL de la imagen directamente desde el objeto Ciudad.
         String imagenCiudadUrl = gestorCiudades.imagenCiudad(ciudadActual);
 
-        // Carga la imagen en el ImageView utilizando Glide.
         Glide.with(holder.itemView.getContext())
                 .load(imagenCiudadUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(true)
                 .into(holder.imagenCiudad);
 
-        // Asigna el nombre y la descripción de la ciudad a los TextViews.
         holder.nombreCiudad.setText(ciudadActual.getNombre());
         holder.descripcionCiudad.setText(ciudadActual.getDescripcion());
 
+        boolean esFavorita = favoritos.contains(ciudadActual.getNombre());
+        holder.like.setImageResource(esFavorita ? R.drawable.buttonlikered : R.drawable.buttonlike);
+
         holder.like.setOnTouchListener(new View.OnTouchListener() {
-            // Se utiliza un GestureDetector para detectar el doble toque.
             private final GestureDetector gestureDetector = new GestureDetector(holder.itemView.getContext(),
                     new GestureDetector.SimpleOnGestureListener() {
                         @Override
                         public boolean onDoubleTap(MotionEvent e) {
-                            // Cambia la imagen del botón "like" al recurso 'buttonlikered' al detectar doble toque.
-                            holder.like.setImageResource(R.drawable.buttonlikered);
+                            String ciudadNombre = ciudadActual.getNombre();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user != null) {
+                                String uid = user.getUid();
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                if (favoritos.contains(ciudadNombre)) {
+                                    favoritos.remove(ciudadNombre);
+                                    holder.like.setImageResource(R.drawable.buttonlike);
+                                } else {
+                                    favoritos.add(ciudadNombre);
+                                    holder.like.setImageResource(R.drawable.buttonlikered);
+                                }
+
+                                db.collection("usuario").document(uid)
+                                        .update("favoritosCiudades", new java.util.ArrayList<>(favoritos))
+                                        .addOnSuccessListener(aVoid -> Log.d("AdaptadorCiudades", "Favoritos actualizados"))
+                                        .addOnFailureListener(ea -> {
+                                    Log.e("AdaptadorCiudades", "Error actualizando favoritos");
+                                    ea.printStackTrace();
+                                });
+                            }
                             return true;
                         }
                     });
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // Delegar el evento de toque al GestureDetector.
                 return gestureDetector.onTouchEvent(event);
             }
         });
@@ -115,11 +113,8 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
             int pos = holder.getAdapterPosition();
             if (pos != RecyclerView.NO_POSITION) {
                 Ciudad ciudadClick = listaCiudades.get(pos);
-
                 String nombreCiudad = ciudadClick.getNombre();
                 String nombrePais = ciudadClick.getPais();
-
-                Log.d("AdaptadorCiudades", "Mandando a fragmento: Ciudad=" + nombreCiudad + ", País=" + nombrePais);
 
                 Context context = v.getContext();
                 while (!(context instanceof AppCompatActivity) && context instanceof ContextWrapper) {
@@ -137,36 +132,18 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
         });
     }
 
-    /**
-     * Retorna el número total de elementos en la lista.
-     *
-     * @return El tamaño de la lista de ciudades.
-     */
     @Override
     public int getItemCount() {
         return listaCiudades.size();
     }
 
-    /**
-     * ViewHolder que contiene los elementos de cada item del RecyclerView.
-     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // ImageView para mostrar la imagen de la ciudad.
         private ImageView imagenCiudad;
-        // TextView para mostrar el nombre de la ciudad.
         private TextView nombreCiudad;
-        // ImageButton que actúa como botón "like".
         private ImageButton like;
-        // TextView para mostrar la descripción de la ciudad.
         private TextView descripcionCiudad;
-        // Botón para abrir el fragmento con opciones de la ciudad.
         private Button abrir;
 
-        /**
-         * Constructor del ViewHolder.
-         *
-         * @param v La vista inflada que representa el item.
-         */
         public ViewHolder(View v) {
             super(v);
             imagenCiudad = v.findViewById(R.id.imageView);
