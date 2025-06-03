@@ -10,6 +10,7 @@ public class Actividad {
     private String precio;
     private Direccion direccion;
     private Ciudad ciudad;
+    private String pais;
 
     private String link;
     private String imagen;
@@ -54,6 +55,10 @@ public class Actividad {
     public void setCiudad(Ciudad ciudad) {
         this.ciudad = ciudad;
     }
+
+    public String getPais() { return pais; }
+
+    public void setPais(String pais) { this.pais = pais; }
 
     public String getLink() {
         return link;

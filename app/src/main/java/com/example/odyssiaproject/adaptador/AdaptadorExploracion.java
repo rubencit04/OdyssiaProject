@@ -2,7 +2,6 @@ package com.example.odyssiaproject.adaptador;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Actividad;
-import com.example.odyssiaproject.entidad.Ciudad;
-import com.example.odyssiaproject.ui.exploration.ExplorationFragment;
+import com.example.odyssiaproject.ui.option.OptionFragment;
 
 import java.util.List;
 
@@ -50,15 +48,25 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
         holder.textNombreActividad.setText(textoResId);
 
         holder.imageExploration.setOnClickListener(v -> {
-            AppCompatActivity activity = (AppCompatActivity) v.getContext();
-            String ciudad = actividad.getCiudad().getNombre();
-            String pais = actividad.getCiudad().getPais(); // Asumiendo getter anidado
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                Actividad actividadClick = actividades.get(pos);
 
-            ExplorationFragment fragment = ExplorationFragment.newInstance(pais, ciudad);
-            activity.getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit();
+                String ciudad = actividadClick.getCiudad().getNombre();
+                String nombreActividad = actividadClick.getNombre();
+
+                Context context = v.getContext();
+                while (!(context instanceof AppCompatActivity) && context instanceof ContextWrapper) {
+                    context = ((ContextWrapper) context).getBaseContext();
+                }
+                AppCompatActivity activity = (AppCompatActivity) context;
+
+                OptionFragment optionFragment = OptionFragment.newInstance(ciudad, nombreActividad);
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, optionFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         });
     }
 

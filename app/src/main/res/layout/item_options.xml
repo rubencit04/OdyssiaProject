@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="180dp"
     app:cardCornerRadius="16dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:layout_marginTop="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +13,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iwOption"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -29,7 +30,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/titleTextView"
+                android:id="@+id/twTitleOption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="?android:attr/textAppearanceSmall"
@@ -41,7 +42,7 @@
                 android:layout_marginBottom="10dp"/>
 
             <TextView
-                android:id="@+id/locationTextView"
+                android:id="@+id/tvLocationOption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="?android:attr/textAppearanceSmall"
@@ -78,7 +79,7 @@
                         android:layout_gravity="center"/>
 
                     <TextView
-                        android:id="@+id/timeTextView"
+                        android:id="@+id/twTimeOption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="?android:attr/textAppearanceSmall"
@@ -107,7 +108,7 @@
                         android:layout_gravity="center"/>
 
                     <TextView
-                        android:id="@+id/priceTextView"
+                        android:id="@+id/twPriceOption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="?android:attr/textAppearanceSmall"
@@ -120,7 +121,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/openButton"
+                android:id="@+id/btOpenOption"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:background="@drawable/button_bluegradient"
