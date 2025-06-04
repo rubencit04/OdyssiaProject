@@ -22,9 +22,14 @@ import com.example.odyssiaproject.negocio.GestorPromociones;
 import com.example.odyssiaproject.persistencia.api.ApiRenderService;
 import com.example.odyssiaproject.persistencia.api.RetrofitRenderClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +41,7 @@ public class CityFragment extends Fragment {
     private RecyclerView recyclerViewCiudades;
 
     private List<Ciudad> listaCiudades = new ArrayList<>();
+    private Set<String> favoritosCiudades = new HashSet<>();
     private AdaptadorPromociones adaptadorPromociones;
     private AdaptadorCiudades adaptadorCiudades;
 
@@ -150,7 +156,7 @@ public class CityFragment extends Fragment {
                     public void onResponse(Call<List<Ciudad>> call, Response<List<Ciudad>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             listaCiudades = response.body();
-                            adaptadorCiudades = new AdaptadorCiudades(listaCiudades);
+                            adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
                             recyclerViewCiudades.setAdapter(adaptadorCiudades);
                         } else {
                             Log.e("CityFragment", "Error en la respuesta al obtener ciudades");
@@ -171,6 +177,43 @@ public class CityFragment extends Fragment {
         }
 
         return root;
+    }
+
+    private void cargarFavoritosDesdeFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+       
+        if (user != null) {
+            db.collection("usuario").document(user.getUid())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            List<String> favList = (List<String>) documentSnapshot.get("favoritosCiudades");
+                            if (favList != null) {
+                                favoritosCiudades.addAll(favList);
+                            } else {
+                                // Campo no existe → lo inicializamos vacío
+                                db.collection("usuario").document(user.getUid())
+                                        .update("favoritosCiudades", new ArrayList<>())
+                                        .addOnSuccessListener(aVoid -> Log.d("CityFragment", "Campo favoritosCiudades inicializado"))
+                                        .addOnFailureListener(e -> Log.e("CityFragment", "Error inicializando favoritosCiudades", e));
+                            }
+                        }
+
+                        adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
+                        recyclerViewCiudades.setAdapter(adaptadorCiudades);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firestore", "Error cargando favoritos", e);
+                        adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
+                        recyclerViewCiudades.setAdapter(adaptadorCiudades);
+                    });
+        } else {
+            Log.w("Firestore", "Usuario no logueado");
+            adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
+            recyclerViewCiudades.setAdapter(adaptadorCiudades);
+        }
     }
 
     @Override
