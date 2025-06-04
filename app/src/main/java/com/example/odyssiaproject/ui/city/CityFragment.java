@@ -175,8 +175,15 @@ public class CityFragment extends Fragment {
                             List<String> favList = (List<String>) documentSnapshot.get("favoritosCiudades");
                             if (favList != null) {
                                 favoritosCiudades.addAll(favList);
+                            } else {
+                                // Campo no existe → lo inicializamos vacío
+                                db.collection("usuario").document(user.getUid())
+                                        .update("favoritosCiudades", new ArrayList<>())
+                                        .addOnSuccessListener(aVoid -> Log.d("CityFragment", "Campo favoritosCiudades inicializado"))
+                                        .addOnFailureListener(e -> Log.e("CityFragment", "Error inicializando favoritosCiudades", e));
                             }
                         }
+
                         adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
                         recyclerViewCiudades.setAdapter(adaptadorCiudades);
                     })

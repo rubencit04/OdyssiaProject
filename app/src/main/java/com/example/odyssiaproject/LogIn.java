@@ -16,6 +16,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class LogIn extends AppCompatActivity {
 
     @Override
@@ -38,22 +42,27 @@ public class LogIn extends AppCompatActivity {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser usuario = mAuth.getCurrentUser();
 
-        if
-        (usuario != null) {
-            // Oculta la pantalla mientras se verifica
+        if (usuario != null) {
             findViewById(R.id.Login).setVisibility(View.INVISIBLE);
 
-            // Verifica si el usuario realmente existe en Firestore
-            FirebaseFirestore.getInstance().collection("usuarios")
-                    .document(usuario.getUid())
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            String uid = usuario.getUid();
+
+            db.collection("usuarios").document(uid)
                     .get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful() && task.getResult().exists()) {
-                            // El usuario existe en Firestore, continuar a MainActivity
+                            // Verificamos si tiene la lista de favoritos
+                            if (!task.getResult().contains("favoritosCiudades")) {
+                                Map<String, Object> update = new HashMap<>();
+                                update.put("favoritosCiudades", new ArrayList<String>());
+                                db.collection("usuarios").document(uid).update(update);
+                            }
+
+                            // Continuamos al MainActivity
                             startActivity(new Intent(LogIn.this, MainActivity.class));
                             finish();
                         } else {
-                            // El usuario NO existe, forzar signOut y mostrar login
                             mAuth.signOut();
                             mostrarLogin();
                         }
@@ -100,6 +109,16 @@ public class LogIn extends AppCompatActivity {
                     @Override
                     public void onSuccess(FirebaseUser user) {
                         Dialogos.showLoading(LogIn.this, "Iniciando Sesion...");
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        String uid = user.getUid();
+                        db.collection("usuarios").document(uid).get().addOnSuccessListener(snapshot -> {
+                            if (snapshot.exists() && !snapshot.contains("favoritosCiudades")) {
+                                Map<String, Object> update = new HashMap<>();
+                                update.put("favoritosCiudades", new ArrayList<String>());
+                                db.collection("usuarios").document(uid).update(update);
+                            }
+                        });
+
                         startActivity(new Intent(LogIn.this, MainActivity.class));
                         finish();
                     }

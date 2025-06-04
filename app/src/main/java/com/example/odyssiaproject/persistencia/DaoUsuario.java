@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,11 +99,14 @@ public class DaoUsuario {
         String uid = firebaseUser.getUid();
         Map<String, Object> userData = new HashMap<>();
         userData.put("uid", uid);
-        userData.put("usuario",usuario.getUsuario());
+        userData.put("usuario", usuario.getUsuario());
         userData.put("contrasenia", usuario.getContrasenia());
         userData.put("nacionalidad", usuario.getNacionalidad());
         userData.put("correo", usuario.getCorreo());
         userData.put("tema", usuario.getTema());
+
+        // Asegurate de iniciar favoritosCiudades como lista vacía
+        userData.put("favoritosCiudades", new ArrayList<String>());
 
         db.collection("usuario").document(uid).set(userData)
                 .addOnSuccessListener(unused -> {
