@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +41,7 @@ public class CityFragment extends Fragment {
     private RecyclerView recyclerViewCiudades;
 
     private List<Ciudad> listaCiudades = new ArrayList<>();
+    private Set<String> favoritosCiudades = new HashSet<>();
     private AdaptadorPromociones adaptadorPromociones;
     private AdaptadorCiudades adaptadorCiudades;
 
@@ -154,7 +156,7 @@ public class CityFragment extends Fragment {
                     public void onResponse(Call<List<Ciudad>> call, Response<List<Ciudad>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             listaCiudades = response.body();
-                            adaptadorCiudades = new AdaptadorCiudades(listaCiudades);
+                            adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
                             recyclerViewCiudades.setAdapter(adaptadorCiudades);
                         } else {
                             Log.e("CityFragment", "Error en la respuesta al obtener ciudades");
