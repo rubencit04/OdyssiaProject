@@ -123,7 +123,7 @@
             <Button
                 android:id="@+id/btOpenOption"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="48dp"
                 android:background="@drawable/button_bluegradient"
                 android:fontFamily="@font/antic"
                 android:textStyle="bold"
