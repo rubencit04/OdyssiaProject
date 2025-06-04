@@ -2,6 +2,8 @@ package com.example.odyssiaproject.adaptador;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +77,39 @@ public class AdaptadorOption extends RecyclerView.Adapter<AdaptadorOption.ViewHo
         holder.titulo.setText(actividadActual.getNombre());
         holder.precio.setText(actividadActual.getPrecio());
         holder.horario.setText(actividadActual.getHorario());
+        holder.direccion.setText(actividadActual.getDireccion());
+        holder.botonAbrir.setOnClickListener(v -> {
+            String url = actividadActual.getLink();
+            String direccion = actividadActual.getDireccion();
+
+            if (url != null && !url.trim().isEmpty()) {
+                url = url.trim();
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    v.getContext().startActivity(intent);
+                } catch (Exception e) {
+                    Log.e("AdaptadorOption", "Error al abrir el enlace: " + url, e);
+                }
+
+            } else if (direccion != null && !direccion.trim().isEmpty()) {
+                String uri = "geo:0,0?q=" + Uri.encode(direccion.trim());
+                try {
+                    Intent intentMaps = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    intentMaps.setPackage("com.google.android.apps.maps");
+                    if (intentMaps.resolveActivity(v.getContext().getPackageManager()) != null) {
+                        v.getContext().startActivity(intentMaps);
+                    } else {
+                        Intent fallback = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        v.getContext().startActivity(fallback);
+                    }
+                } catch (Exception e) {
+                    Log.e("AdaptadorOption", "Error al abrir Maps con la dirección: " + direccion, e);
+                }
+
+            } else {
+                Log.w("AdaptadorOption", "Ni link ni dirección disponibles para: " + actividadActual.getNombre());
+            }
+        });
     }
 
     @Override

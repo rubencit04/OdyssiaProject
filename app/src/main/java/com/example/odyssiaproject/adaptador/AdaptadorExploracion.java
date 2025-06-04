@@ -24,11 +24,13 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
     private List<Actividad> actividades;
     private List<Integer> imagenesDrawable;
     private List<Integer> nombresStringId;
+    private String nombrePais;
 
-    public AdaptadorExploracion(List<Actividad> actividades, List<Integer> imagenesDrawable, List<Integer> nombresStringId) {
+    public AdaptadorExploracion(List<Actividad> actividades, List<Integer> imagenesDrawable, List<Integer> nombresStringId, String nombrePais) {
         this.actividades = actividades;
         this.imagenesDrawable = imagenesDrawable;
         this.nombresStringId = nombresStringId;
+        this.nombrePais = nombrePais;
     }
 
     @NonNull
@@ -56,7 +58,7 @@ public class AdaptadorExploracion extends RecyclerView.Adapter<AdaptadorExplorac
                 String ciudad = actividades.get(pos).getCiudad().getNombre();
 
                 // Asumiendo que OptionFragment acepta estos parámetros:
-                OptionFragment optionFragment = OptionFragment.newInstance(ciudad, nombreActividad);
+                OptionFragment optionFragment = OptionFragment.newInstance(ciudad, nombreActividad, nombrePais);
 
                 // Para obtener AppCompatActivity:
                 while (!(context instanceof AppCompatActivity) && context instanceof ContextWrapper) {
