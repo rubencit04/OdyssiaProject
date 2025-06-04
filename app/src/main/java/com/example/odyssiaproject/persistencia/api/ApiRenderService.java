@@ -25,6 +25,9 @@ public interface ApiRenderService {
     @GET("/ciudades")
     Call<List<Ciudad>> getCiudades(@Query("pais") String pais);
 
+    @GET("/ciudades")
+    Call<List<Ciudad>> getCiudades(@Query("pais") String pais,@Query("ciudad") String ciudad);
+
     @GET("/promociones")
     Call<List<Promociones>> getPromociones(@Query("pais") String pais);
 

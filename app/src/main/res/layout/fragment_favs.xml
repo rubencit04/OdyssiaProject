@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/favsFragment"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutFavs"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     android:background="@color/white"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="ui.favs.FavsFragment">
+    >
+
+    <TextView
+        android:id="@+id/tituloFavs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tus ciudades favoritas"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="16dp"
+        android:textColor="@color/black"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rwOptions"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_options" />
+        android:id="@+id/recyclerViewFavs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
+        android:scrollbars="vertical"/>
+</LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
