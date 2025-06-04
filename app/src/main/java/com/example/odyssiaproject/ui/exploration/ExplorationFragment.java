@@ -85,14 +85,43 @@ public class ExplorationFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
 
-        adaptadorPromociones = new AdaptadorPromociones(new ArrayList<>());
-        recyclerViewPromociones.setAdapter(adaptadorPromociones);
 
         controladorScrollPromociones = new PromocionesAutoScroller(
                 recyclerViewPromociones,
                 VELOCIDAD_SCROLL_PX_BASICO,
                 RETRASO_PASO_SCROLL_MS_BASICO
         );
+
+        controladorScrollPromociones.iniciarScroll();
+
+        adaptadorPromociones = new AdaptadorPromociones(
+                new ArrayList<>(),
+                controladorScrollPromociones
+        );
+        recyclerViewPromociones.setAdapter(adaptadorPromociones);
+
+        recyclerViewPromociones.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
+                super.onScrollStateChanged(rv, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    controladorScrollPromociones.detenerScroll();
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    controladorScrollPromociones.reanudarScrollConRetraso(700);
+                }
+            }
+        });
+
+        recyclerViewPromociones.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    // El usuario está desplazando manualmente: detenemos el scroll automático
+                    controladorScrollPromociones.detenerScroll();
+                }
+            }
+        });
 
         if (getArguments() != null) {
             String nombrePais = getArguments().getString("pais");
@@ -113,7 +142,7 @@ public class ExplorationFragment extends Fragment {
                     public void onPromocionesCargadas(List<Promociones> promociones) {
                         if (promociones != null && !promociones.isEmpty()) {
                             adaptadorPromociones.actualizarDatos(promociones);
-                            controladorScrollPromociones.iniciarScroll();
+
                         } else {
                             Log.w("ExplorationFragment", "Lista de promociones está vacía o nula. No se inicia scroll.");
                             adaptadorPromociones.actualizarDatos(new ArrayList<>());
@@ -147,7 +176,7 @@ public class ExplorationFragment extends Fragment {
                         R.string.titulo_monumentos
                 );
 
-                adaptadorExploracion = new AdaptadorExploracion(listaActividades, imagenesDrawable, nombresStringId);
+                adaptadorExploracion = new AdaptadorExploracion(listaActividades, imagenesDrawable, nombresStringId, pais.getNombre());
                 rwExploration.setAdapter(adaptadorExploracion);
 
             } else {
@@ -194,7 +223,7 @@ public class ExplorationFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.reanudarScroll(); // si implementaste pausa/reanudar
+            controladorScrollPromociones.reanudarScrollConRetraso(100);
         }
     }
 
@@ -202,8 +231,7 @@ public class ExplorationFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.pausarScroll(); // o detenerScroll()
+            controladorScrollPromociones.detenerScroll();
         }
     }
-
 }

@@ -61,5 +61,9 @@ public class PromocionesAutoScroller {
         handler.removeCallbacks(runnableScroll);
     }
 
+    public void reanudarScrollConRetraso(long ms) {
+        handler.removeCallbacks(runnableScroll);
+        handler.postDelayed(runnableScroll, ms);
+    }
     // Métodos opcionales de pausa/reanudar ...
 }

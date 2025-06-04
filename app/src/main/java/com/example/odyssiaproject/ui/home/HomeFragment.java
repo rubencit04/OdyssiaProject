@@ -54,7 +54,6 @@ public class HomeFragment extends Fragment {
     private LinearLayoutManager promocionesLayoutManager;
     private ApiRenderService apiRenderService;
 
-    // Aquí instanciamos GestorPromociones, que maneja la lógica de negocio
     private GestorPromociones gestorPromociones = new GestorPromociones();
 
     @Nullable
@@ -77,14 +76,11 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        // Configuración RecyclerView promociones (horizontal)
         recyclerViewPromociones = root.findViewById(R.id.rwPromotions);
         recyclerViewPromociones.setHasFixedSize(true);
         promocionesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
 
-        adaptadorPromociones = new AdaptadorPromociones(new ArrayList<Promociones>());
-        recyclerViewPromociones.setAdapter(adaptadorPromociones);
 
         controladorScrollPromociones = new PromocionesAutoScroller(
                 recyclerViewPromociones,
@@ -92,12 +88,32 @@ public class HomeFragment extends Fragment {
                 RETRASO_PASO_SCROLL_MS_BASICO
         );
 
+        controladorScrollPromociones.iniciarScroll();
+
+        adaptadorPromociones = new AdaptadorPromociones(
+                new ArrayList<>(),
+                controladorScrollPromociones
+        );
+        recyclerViewPromociones.setAdapter(adaptadorPromociones);
+
+        recyclerViewPromociones.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    controladorScrollPromociones.detenerScroll();
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    controladorScrollPromociones.reanudarScrollConRetraso(700);
+                }
+            }
+        });
+
         gestorPromociones.obtenerPromociones(new GestorPromociones.CallbackPromociones() {
             @Override
             public void onPromocionesCargadas(List<Promociones> promociones) {
                 if (promociones != null && !promociones.isEmpty()) {
                     adaptadorPromociones.actualizarDatos(promociones);
-                    controladorScrollPromociones.iniciarScroll();
+
                 } else {
                     Log.w("HomeFragment", "Lista de promociones vacía o nula");
                     adaptadorPromociones.actualizarDatos(new ArrayList<>());
@@ -159,7 +175,7 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.reanudarScroll(); // Si implementas pausa/reanudar
+            controladorScrollPromociones.reanudarScrollConRetraso(100);
         }
     }
 
@@ -167,7 +183,7 @@ public class HomeFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.pausarScroll(); // O detenerScroll() si solo quieres parar
+           controladorScrollPromociones.detenerScroll();
         }
     }
 }

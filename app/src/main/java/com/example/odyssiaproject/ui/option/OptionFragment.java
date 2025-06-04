@@ -43,8 +43,11 @@ public class OptionFragment extends Fragment {
 
     private static final String ARG_NOMBRE_CIUDAD = "ciudad";
     private static final String ARG_NOMBRE_ACTIVIDAD = "actividad";
+
+    private static final String ARG_NOMBRE_PAIS = "pais";
     private String nombreCiudad;
     private String nombreActividad;
+    private String nombrePais;
 
     private GestorPromociones gestorPromociones;
 
@@ -55,11 +58,12 @@ public class OptionFragment extends Fragment {
 
     public OptionFragment() {}
 
-    public static OptionFragment newInstance(String nombreCiudad, String nombreActividad) {
+    public static OptionFragment newInstance(String nombreCiudad, String nombreActividad, String nombrePais) {
         OptionFragment fragment = new OptionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_NOMBRE_CIUDAD, nombreCiudad);
         args.putString(ARG_NOMBRE_ACTIVIDAD, nombreActividad);
+        args.putString(ARG_NOMBRE_PAIS, nombrePais);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,11 +72,12 @@ public class OptionFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Instanciar el gestor
+
         gestorPromociones = new GestorPromociones();
         if (getArguments() != null) {
             nombreCiudad = getArguments().getString(ARG_NOMBRE_CIUDAD);
             nombreActividad = getArguments().getString(ARG_NOMBRE_ACTIVIDAD);
+            nombrePais = getArguments().getString(ARG_NOMBRE_PAIS);
         }
 
 
@@ -93,8 +98,6 @@ public class OptionFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
 
-        adaptadorPromociones = new AdaptadorPromociones(new ArrayList<>());
-        recyclerViewPromociones.setAdapter(adaptadorPromociones);
 
         controladorScrollPromociones = new PromocionesAutoScroller(
                 recyclerViewPromociones,
@@ -102,7 +105,27 @@ public class OptionFragment extends Fragment {
                 RETRASO_PASO_SCROLL_MS_BASICO
         );
 
-        gestorPromociones.obtenerPromociones(new GestorPromociones.CallbackPromociones() {
+        controladorScrollPromociones.iniciarScroll();
+
+        adaptadorPromociones = new AdaptadorPromociones(
+                new ArrayList<>(),
+                controladorScrollPromociones
+        );
+        recyclerViewPromociones.setAdapter(adaptadorPromociones);
+
+        recyclerViewPromociones.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
+                super.onScrollStateChanged(rv, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    controladorScrollPromociones.detenerScroll();
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    controladorScrollPromociones.reanudarScrollConRetraso(700);
+                }
+            }
+        });
+
+        gestorPromociones.obtenerPromocionesPorPais(nombrePais,new GestorPromociones.CallbackPromociones() {
             @Override
             public void onPromocionesCargadas(List<Promociones> promociones) {
                 if (promociones != null && !promociones.isEmpty()) {
@@ -122,8 +145,9 @@ public class OptionFragment extends Fragment {
         });
 
         if (getArguments() != null) {
-            String nombreCiudad = getArguments().getString(ARG_NOMBRE_CIUDAD);
-            String nombreActividad = getArguments().getString(ARG_NOMBRE_ACTIVIDAD);
+             nombreCiudad = getArguments().getString(ARG_NOMBRE_CIUDAD);
+             nombreActividad = getArguments().getString(ARG_NOMBRE_ACTIVIDAD);
+            nombrePais = getArguments().getString(ARG_NOMBRE_PAIS);
 
             cargarActividades(nombreActividad, nombreCiudad, null, recyclerViewOptions);
         } else {
@@ -211,7 +235,7 @@ public class OptionFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.reanudarScroll(); // si implementaste pausa/reanudar
+            controladorScrollPromociones.reanudarScrollConRetraso(100);
         }
     }
 
@@ -219,7 +243,7 @@ public class OptionFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.pausarScroll(); // o detenerScroll()
+           controladorScrollPromociones.detenerScroll();
         }
     }
 }

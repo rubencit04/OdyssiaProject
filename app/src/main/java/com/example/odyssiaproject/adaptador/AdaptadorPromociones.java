@@ -1,9 +1,12 @@
 package com.example.odyssiaproject.adaptador;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -15,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.entidad.Promociones;
 import com.example.odyssiaproject.negocio.GestorPromociones;
+import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +27,12 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
 
     private List<Promociones> listaPromociones = new ArrayList<>();
     private GestorPromociones gestorPromociones = new GestorPromociones();
+    private PromocionesAutoScroller controladorScroll;
 
-    public AdaptadorPromociones(ArrayList<Promociones> listaPromociones) {
+    public AdaptadorPromociones(ArrayList<Promociones> listaPromociones, PromocionesAutoScroller controlador) {
         this.listaPromociones = listaPromociones;
+        this.gestorPromociones = new GestorPromociones();
+        this.controladorScroll = controlador;
     }
 
     public void actualizarDatos(List<Promociones> nuevasPromociones) {
@@ -37,20 +44,27 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
         private ImageButton imagenPromocion;
 
-        public ViewHolder(@NonNull View v) {
-            super(v);
-            imagenPromocion = v.findViewById(R.id.imagePromotion);
+        private PromocionesAutoScroller controladorScroll;
+
+
+
+        ViewHolder(@NonNull View itemView, PromocionesAutoScroller controladorScroll) {
+            super(itemView);
+            this.controladorScroll = controladorScroll;
+            imagenPromocion = itemView.findViewById(R.id.imagePromotion);
         }
     }
+
 
     @NonNull
     @Override
     public AdaptadorPromociones.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_promotions, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v, controladorScroll);
     }
 
     @Override
@@ -67,18 +81,19 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
                     .error(R.drawable.imgpromotion)
                     .into(holder.imagenPromocion);
 
+
             holder.imagenPromocion.setOnClickListener(v -> {
                 String url = p.getLink();
-                if (url != null && !url.isEmpty()) {
-                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                        url = "http://" + url;
-                    }
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    if (intent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                if (url != null && !url.trim().isEmpty()) {
+                    url = url.trim();
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                         v.getContext().startActivity(intent);
-                    } else {
-                        Log.w("AdaptadorPromociones", "No hay app para manejar el enlace: " + url);
+                    } catch (Exception e) {
+                        Log.e("AdaptadorPromociones", "Error al abrir el enlace: " + url, e);
                     }
+                } else {
+                    Log.w("AdaptadorPromociones", "Promoción sin link=" + p.getNombre());
                 }
             });
         } else {

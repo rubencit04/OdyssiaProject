@@ -67,7 +67,6 @@ public class CityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Instanciar el gestor
         gestorPromociones = new GestorPromociones();
 
         if (getArguments() != null) {
@@ -92,15 +91,31 @@ public class CityFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
 
-        adaptadorPromociones = new AdaptadorPromociones(new ArrayList<>());
-        recyclerViewPromociones.setAdapter(adaptadorPromociones);
 
         controladorScrollPromociones = new PromocionesAutoScroller(
                 recyclerViewPromociones,
                 VELOCIDAD_SCROLL_PX_BASICO,
                 RETRASO_PASO_SCROLL_MS_BASICO
         );
+        controladorScrollPromociones.iniciarScroll();
 
+        adaptadorPromociones = new AdaptadorPromociones(
+                new ArrayList<>(),
+                controladorScrollPromociones
+        );
+        recyclerViewPromociones.setAdapter(adaptadorPromociones);
+
+        recyclerViewPromociones.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
+                super.onScrollStateChanged(rv, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    controladorScrollPromociones.detenerScroll();
+                } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    controladorScrollPromociones.reanudarScrollConRetraso(300);
+                }
+            }
+        });
         if (getArguments() != null) {
             String nombrePais = getArguments().getString("pais");
             if (nombrePais != null && !nombrePais.isEmpty()) {
@@ -114,7 +129,7 @@ public class CityFragment extends Fragment {
                     public void onPromocionesCargadas(List<Promociones> promociones) {
                         if (promociones != null && !promociones.isEmpty()) {
                             adaptadorPromociones.actualizarDatos(promociones);
-                            controladorScrollPromociones.iniciarScroll();
+
                         } else {
                             Log.w("CityFragment", "Lista de promociones está vacía o nula. No se inicia scroll.");
                             adaptadorPromociones.actualizarDatos(new ArrayList<>());
@@ -177,7 +192,7 @@ public class CityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.reanudarScroll(); // si implementaste pausa/reanudar
+            controladorScrollPromociones.reanudarScrollConRetraso(700);
         }
     }
 
@@ -185,7 +200,7 @@ public class CityFragment extends Fragment {
     public void onStop() {
         super.onStop();
         if (controladorScrollPromociones != null) {
-            // controladorScrollPromociones.pausarScroll(); // o detenerScroll()
+            controladorScrollPromociones.detenerScroll();
         }
     }
 }
