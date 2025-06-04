@@ -25,18 +25,38 @@
         tools:listitem="@layout/item_promotions" />
 
     <!-- Sort Button - Izquierda debajo de promociones -->
-    <ImageButton
-        android:id="@+id/btnSortBy"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/buttonsortby2"
-        android:contentDescription="sort by button"
-        app:layout_constraintTop_toBottomOf="@id/rwPromotions"
-        app:layout_constraintStart_toStartOf="parent"
+    <LinearLayout
+        android:id="@+id/filtro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/rwCountries"
-        android:layout_marginStart="4dp"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rwPromotions">
+
+
+        <!-- Sort Button (a la izquierda debajo del RecyclerView de promociones) -->
+        <ImageButton
+            android:id="@+id/btnSortBy"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/buttonsortby2"
+            android:contentDescription="sort by button" />
+
+        <TextView
+            android:id="@+id/tvfiltro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/antic"
+            android:text="aa"
+            android:textColor="#5294FF"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <!-- RecyclerView Countries - Vertical, ocupa resto de espacio -->
     <androidx.recyclerview.widget.RecyclerView
@@ -44,7 +64,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/btnSortBy"
+        app:layout_constraintTop_toBottomOf="@id/filtro"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
