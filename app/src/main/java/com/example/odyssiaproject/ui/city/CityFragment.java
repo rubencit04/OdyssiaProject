@@ -152,27 +152,20 @@ public class CityFragment extends Fragment {
                     }
                 });
 
-                gestorCiudades.obtenerCiudadesPorPais(pais.getNombre(), new GestorCiudades.CallbackCiudades() {
+                gestorCiudades.obtenerCiudadesPorPais(pais.getNombre(),new GestorCiudades.CallbackCiudades() {
                     @Override
                     public void onCiudadesCargados(List<Ciudad> listaCiudades) {
-                        if (listaCiudades != null && !listaCiudades.isEmpty()) {
-                            listaCiudades.clear();
-                            listaCiudades.addAll(listaCiudades);
-                            adaptadorCiudades = new AdaptadorCiudades(listaCiudades, favoritosCiudades);
-                            recyclerViewCiudades.setAdapter(adaptadorCiudades);
-
-                            cargarFavoritosDesdeFirestore();
-                        } else {
-                            Log.w("CityFragment", "Lista de ciudades vacía o nula en la respuesta.");
-                        }
+                        adaptadorCiudades = new AdaptadorCiudades(listaCiudades,favoritosCiudades);
+                        recyclerViewCiudades.setAdapter(adaptadorCiudades);
+                        cargarFavoritosDesdeFirestore();
                     }
-
 
                     @Override
                     public void onError(Throwable t) {
                         Log.e("HomeFragment", "Error al cargar ciudades", t);
                     }
                 });
+               
                 btnFiltro.setOnClickListener(v -> {
                     PopupMenu popupMenu = new PopupMenu(requireContext(), v);
                     popupMenu.getMenuInflater().inflate(R.menu.activity_sort_menu, popupMenu.getMenu());
