@@ -20,6 +20,8 @@ import com.example.odyssiaproject.ui.ajustes.ConfigFragment;
 import com.example.odyssiaproject.ui.favs.FavsFragment;
 import com.example.odyssiaproject.ui.home.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * MainActivity es la actividad principal de la aplicación.
@@ -204,9 +206,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         TextView twUsuario = headerView.findViewById(R.id.twUsuario);
 
+        // 1) Leemos primero el nombre de SharedPreferences
         SharedPreferences prefs = getSharedPreferences("user_data", MODE_PRIVATE);
-        String nombre = prefs.getString("nombre_usuario", "Usuario"); // Valor por defecto: "Usuario"
+        String nombrePrefs = prefs.getString("nombre_usuario", "").trim();
+        if (!nombrePrefs.isEmpty()) {
+            // Si ya existe un "nombre_usuario" guardado, lo mostramos
+            twUsuario.setText(nombrePrefs);
+            return;
+        }
 
-        twUsuario.setText(nombre);
+        // 2) Si no hay "nombre_usuario", intentamos obtener displayName de Firebase
+        FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fbUser != null) {
+            String nombreFirebase = fbUser.getDisplayName();
+            if (nombreFirebase != null && !nombreFirebase.trim().isEmpty()) {
+                twUsuario.setText(nombreFirebase);
+                return;
+            }
+
+            // 3) Si no hay displayName, mostramos el email como último recurso
+            String email = fbUser.getEmail();
+            if (email != null && !email.trim().isEmpty()) {
+                twUsuario.setText(email);
+                return;
+            }
+        }
+
+        // 4) Si ni SharedPreferences ni Firebase tienen valor, ponemos un texto genérico
+        twUsuario.setText("Usuario");
     }
+
+
 }

@@ -92,9 +92,22 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
                                 if (favoritos.contains(ciudadNombre)) {
                                     favoritos.remove(ciudadNombre);
                                     holder.like.setImageResource(R.drawable.buttonlike);
-                                } else {
-                                    favoritos.add(ciudadNombre);
-                                    holder.like.setImageResource(R.drawable.buttonlikered);
+                                }else {
+                                    if (!favoritos.contains(ciudadNombre)) {
+                                        favoritos.add(ciudadNombre);
+                                        holder.like.setImageResource(R.drawable.buttonlikered);
+
+                                        db.collection("usuario").document(uid)
+                                                .update("favoritosCiudades", new java.util.ArrayList<>(favoritos))
+                                                .addOnSuccessListener(aVoid -> Log.d("AdaptadorCiudades", "Favoritos actualizados"))
+                                                .addOnFailureListener(ea -> {
+                                                    Log.e("AdaptadorCiudades", "Error actualizando favoritos");
+                                                    ea.printStackTrace();
+                                                });
+                                    } else {
+                                        Log.d("AdaptadorCiudades", "Ciudad ya en favoritos, no se vuelve a agregar");
+                                    }
+                                    return true;
                                 }
 
                                 db.collection("usuario").document(uid)
