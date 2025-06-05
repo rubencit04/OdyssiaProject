@@ -37,8 +37,8 @@
         <!-- Sort Button (a la izquierda debajo del RecyclerView de promociones) -->
         <ImageButton
             android:id="@+id/btnSortBy"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="4dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/buttonsortby2"
@@ -51,7 +51,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/antic"
-            android:text="aa"
+            android:text="Filtrado: ninguno"
             android:textColor="#5294FF"
             android:textSize="22sp"
             android:textStyle="bold" />

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
+import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.negocio.GestorCiudades;
 import com.example.odyssiaproject.ui.exploration.ExplorationFragment;
@@ -41,6 +42,11 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
         this.listaCiudades = listaCiudades;
         this.gestorCiudades = new GestorCiudades();
         this.favoritos = favoritosCiudades;
+    }
+    public void actualizarDatos(List<Ciudad> nuevosCiudades) {
+        listaCiudades.clear();
+        listaCiudades.addAll(nuevosCiudades);
+        notifyDataSetChanged();
     }
 
     public void setFavoritos(Set<String> favoritos) {

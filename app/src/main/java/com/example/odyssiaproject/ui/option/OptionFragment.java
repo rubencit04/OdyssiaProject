@@ -1,11 +1,15 @@
 
 package com.example.odyssiaproject.ui.option;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,20 +21,13 @@ import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.adaptador.AdaptadorOption;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.dto.ActividadDTO;
-import com.example.odyssiaproject.entidad.Actividad;
-import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.entidad.Promociones;
+import com.example.odyssiaproject.negocio.GestorActividades;
 import com.example.odyssiaproject.negocio.GestorPromociones;
-import com.example.odyssiaproject.persistencia.api.ApiRenderService;
-import com.example.odyssiaproject.persistencia.api.RetrofitRenderClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class OptionFragment extends Fragment {
 
@@ -55,6 +52,10 @@ public class OptionFragment extends Fragment {
 
     private static final int VELOCIDAD_SCROLL_PX_BASICO = 10;
     private static final long RETRASO_PASO_SCROLL_MS_BASICO = 50;
+    private GestorActividades gestorActividades = new GestorActividades();
+    private ImageButton btnFiltro;
+    private String filtroActivo = null;
+    private TextView textViewFiltro;
 
     public OptionFragment() {}
 
@@ -87,6 +88,8 @@ public class OptionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_option, container, false);
+        btnFiltro = root.findViewById(R.id.btnSortBy);
+        TextView textViewFiltro = root.findViewById(R.id.tvfiltro);
 
         recyclerViewOptions = root.findViewById(R.id.rwOptions);
         recyclerViewOptions.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -149,7 +152,115 @@ public class OptionFragment extends Fragment {
              nombreActividad = getArguments().getString(ARG_NOMBRE_ACTIVIDAD);
             nombrePais = getArguments().getString(ARG_NOMBRE_PAIS);
 
-            cargarActividades(nombreActividad, nombreCiudad, null, recyclerViewOptions);
+            gestorActividades.obtenerActividadesPorTipo(nombreActividad, nombreCiudad, null, new GestorActividades.CallbackActividades() {
+                @Override
+                public void onActividadesCargadas(List<ActividadDTO> actividades) {
+                    if (actividades != null && !actividades.isEmpty()) {
+                        Context context = getContext();
+                        if (context != null) {
+                            adaptadorActividades = new AdaptadorOption(context, actividades);
+                            recyclerViewOptions.setAdapter(adaptadorActividades);
+                        } else {
+                            Log.e("OptionFragment", "Context es null al crear el adaptador");
+                        }
+                    } else {
+                        Log.w("OptionFragment", "Lista de actividades vacía o nula");
+                    }
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    Log.e("OptionFragment", "Error cargando actividades", t);
+                }
+            });
+            btnFiltro.setOnClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                popupMenu.getMenuInflater().inflate(R.menu.activity_sort_menu_activities, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    int id = item.getItemId();
+                    String nombreFiltro = item.getTitle().toString();
+
+                    if (nombreFiltro.equals(filtroActivo)) {
+                        filtroActivo = null;
+                        textViewFiltro.setText("Filtrado: ninguno");
+
+                        gestorActividades.obtenerActividadesPorTipo(nombreActividad, nombreCiudad, null,new GestorActividades.CallbackActividades() {
+                            @Override
+                            public void onActividadesCargadas(List<ActividadDTO> lista) {
+                                adaptadorActividades.actualizarDatos(lista);
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                Log.e("HomeFragment", "Error al quitar filtro", t);
+                            }
+                        });
+
+                        return true;
+                    }
+
+                    filtroActivo = nombreFiltro;
+                    textViewFiltro.setText("Filtrado: " + nombreFiltro);
+
+                    if (id == R.id.sortA_Z) {
+                        gestorActividades.obtenerActividadesOrdenadosAZ(nombreActividad,nombreCiudad,null,new GestorActividades.CallbackActividades(){
+                            @Override
+                            public void onActividadesCargadas(List<ActividadDTO> lista) {
+                                adaptadorActividades.actualizarDatos(lista);
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                Log.e("HomeFragment", "Error al ordenar A-Z", t);
+                            }
+                        });
+
+                    } else if (id == R.id.gratis) {
+                        gestorActividades.obtenerActividadesGratis(nombreActividad,nombreCiudad,null,new GestorActividades.CallbackActividades() {
+                            @Override
+                            public void onActividadesCargadas(List<ActividadDTO> lista) {
+                                adaptadorActividades.actualizarDatos(lista);
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                Log.e("HomeFragment", "Error al ordenar por actividades gratis", t);
+                            }
+                        });
+
+                    } else if (id == R.id.precioBarato) {
+                        gestorActividades.obtenerActividadesPorPrecioBarato(nombreActividad,nombreCiudad,null,0.0, 100000.0,new GestorActividades.CallbackActividades() {
+                            @Override
+                            public void onActividadesCargadas(List<ActividadDTO> lista) {
+                                adaptadorActividades.actualizarDatos(lista);
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                Log.e("HomeFragment", "Error al ordenar por popularidad", t);
+                            }
+                        });
+                    } else if (id == R.id.precioCaro) {
+                        gestorActividades.obtenerActividadesPorPrecioCaro(nombreActividad, nombreCiudad, null, 0.0, 100000.0, new GestorActividades.CallbackActividades() {
+                            @Override
+                            public void onActividadesCargadas(List<ActividadDTO> lista) {
+                                adaptadorActividades.actualizarDatos(lista);
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                Log.e("HomeFragment", "Error al ordenar por popularidad", t);
+
+                            }
+                        });
+                    }
+
+                    return true;
+                });
+
+                popupMenu.show();
+            });
+
         } else {
             Log.e("OptionFragment", "No se encontraron argumentos");
         }
@@ -157,62 +268,6 @@ public class OptionFragment extends Fragment {
         return root;
     }
 
-
-    private void cargarActividades(String actividad, String ciudad, String pais, RecyclerView recyclerView) {
-        Log.d("OptionFragment", "cargarActividades con actividad=" + actividad + ", ciudad=" + ciudad);
-        actividad = actividad.toLowerCase().replace("-", " ");
-        ApiRenderService apiService = RetrofitRenderClient.getApiService();
-
-        Call<List<ActividadDTO>> call;
-
-        switch (actividad) {
-            case "alojamientos":
-                call = apiService.getAlojamientos(ciudad, pais);
-                break;
-            case "cultura":
-                call = apiService.getCultura(ciudad, pais);
-                break;
-            case "monumentos":
-                call = apiService.getMonumentos(ciudad, pais);
-                break;
-            case "ocio nocturno":
-                call = apiService.getOcioNocturno(ciudad, pais);
-                break;
-            case "ocio":
-                call = apiService.getOcio(ciudad, pais);
-                break;
-            case "restaurantes":
-                call = apiService.getRestaurantes(ciudad, pais);
-                break;
-            default:
-                Log.e("OptionFragment", "Actividad no reconocida: " + actividad);
-                return;
-        }
-
-        call.enqueue(new Callback<List<ActividadDTO>>() {
-            @Override
-            public void onResponse(Call<List<ActividadDTO>> call, Response<List<ActividadDTO>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<ActividadDTO> todasActividades = response.body();
-                    Log.d("OptionFragment", "Recibidas " + todasActividades.size() + " actividades");
-
-                    listaActividades = todasActividades;
-
-                    adaptadorActividades = new AdaptadorOption(requireContext(), listaActividades);
-                    recyclerView.setAdapter(adaptadorActividades);
-
-                } else {
-                    Log.e("OptionFragment", "Respuesta no exitosa o cuerpo null: " + response.code());
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<List<ActividadDTO>> call, Throwable t) {
-                Log.e("OptionFragment", "Fallo al obtener actividades", t);
-            }
-        });
-    }
 
 
 

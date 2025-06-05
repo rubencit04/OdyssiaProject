@@ -21,6 +21,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.dto.ActividadDTO;
 import com.example.odyssiaproject.entidad.Actividad;
+import com.example.odyssiaproject.entidad.Ciudad;
 import com.example.odyssiaproject.negocio.GestorOptions;
 import com.example.odyssiaproject.ui.option.OptionFragment;
 
@@ -45,10 +46,15 @@ public class AdaptadorOption extends RecyclerView.Adapter<AdaptadorOption.ViewHo
         void onAbrirClick(ActividadDTO actividad);
     }
 
-    public AdaptadorOption(Context context, List<ActividadDTO> actividades) {
+    public AdaptadorOption(Context context,List<ActividadDTO> actividades) {
         this.context = context;
         this.actividades = actividades;
         this.gestor = new GestorOptions();
+    }
+    public void actualizarDatos(List<ActividadDTO> nuevasActividades) {
+        actividades.clear();
+        actividades.addAll(nuevasActividades);
+        notifyDataSetChanged();
     }
 
 

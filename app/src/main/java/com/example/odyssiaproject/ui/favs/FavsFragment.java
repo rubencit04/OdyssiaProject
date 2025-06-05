@@ -76,7 +76,7 @@ public class FavsFragment extends Fragment {
 
     private void obtenerCiudadesFavoritas() {
         // Acá traés todas las ciudades desde la API
-        apiRenderService.getCiudades(null).enqueue(new Callback<List<Ciudad>>() {
+        apiRenderService.getCiudades(null,null).enqueue(new Callback<List<Ciudad>>() {
             @Override
             public void onResponse(Call<List<Ciudad>> call, Response<List<Ciudad>> response) {
                 if (response.isSuccessful() && response.body() != null) {
