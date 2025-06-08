@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.odyssiaproject.ui.ajustes.ConfigFragment;
 import com.example.odyssiaproject.ui.favs.FavsFragment;
 import com.example.odyssiaproject.ui.home.HomeFragment;
+import com.example.odyssiaproject.ui.pasaporte.PasaporteFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -98,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            if (currentFragment instanceof ConfigFragment || currentFragment instanceof FavsFragment) {
+            if (currentFragment instanceof ConfigFragment || currentFragment instanceof FavsFragment||
+                    currentFragment instanceof PasaporteFragment) {
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().hide();
                 }
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 loadFragment(new FavsFragment());
             } else if (item.getItemId() == R.id.swipeGo) {
                 Log.d("NAVIGATION", "Cargando SwipeGoFragment...");
-                loadFragment(new FavsFragment());
+                loadFragment(new PasaporteFragment());
             } else if (item.getItemId() == R.id.miOdyssia) {
                 Log.d("NAVIGATION", "Cargando MiOdyssiaFragment...");
                 loadFragment(new FavsFragment());
@@ -164,7 +166,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.commit();
 
         if (fragment instanceof ConfigFragment ||
-                fragment instanceof FavsFragment ) {
+                fragment instanceof FavsFragment ||
+                fragment instanceof PasaporteFragment) {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().hide();
             }

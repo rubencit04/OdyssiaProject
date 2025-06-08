@@ -97,7 +97,7 @@ public class FavsFragment extends Fragment {
     }
 
     private void mostrarCiudadesFavoritas() {
-        adaptador = new AdaptadorCiudades(ciudadesFavoritas, favoritosNombres); // igual que en CityFragment
+        adaptador = new AdaptadorCiudades(ciudadesFavoritas, favoritosNombres);
         recyclerViewFavs.setAdapter(adaptador);
     }
 }

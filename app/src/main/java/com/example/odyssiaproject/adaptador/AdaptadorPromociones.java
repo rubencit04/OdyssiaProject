@@ -108,6 +108,4 @@ public class AdaptadorPromociones extends RecyclerView.Adapter<AdaptadorPromocio
     public int getItemCount() {
         return (listaPromociones != null && !listaPromociones.isEmpty()) ? Integer.MAX_VALUE : 0;
     }
-
-
 }
