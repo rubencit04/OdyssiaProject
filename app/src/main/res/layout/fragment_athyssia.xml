@@ -40,14 +40,16 @@
             android:fontFamily="@font/antic"
             android:textStyle="bold" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <ImageButton
             android:id="@+id/btEnviarMensaje"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:backgroundTint="@color/white"
+            android:padding="15dp"
+            android:background="@drawable/button_bluegradient"
             android:src="@drawable/ic_mandar"
+            android:contentDescription="boton enviar mensaje"
             app:fabCustomSize="54dp" />
     </RelativeLayout>
 </RelativeLayout>

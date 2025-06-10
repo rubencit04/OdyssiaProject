@@ -76,7 +76,7 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
         holder.descripcionCiudad.setText(ciudadActual.getDescripcion());
 
         boolean esFavorita = favoritos.contains(ciudadActual.getNombre());
-        holder.like.setImageResource(esFavorita ? R.drawable.buttonlikered : R.drawable.buttonlike);
+        holder.like.setImageResource(esFavorita ? R.drawable.v2_favorite_red_icon : R.drawable.v2_favorite_icon);
 
         holder.like.setOnTouchListener(new View.OnTouchListener() {
             private final GestureDetector gestureDetector = new GestureDetector(holder.itemView.getContext(),
@@ -91,11 +91,11 @@ public class AdaptadorCiudades extends RecyclerView.Adapter<AdaptadorCiudades.Vi
 
                                 if (favoritos.contains(ciudadNombre)) {
                                     favoritos.remove(ciudadNombre);
-                                    holder.like.setImageResource(R.drawable.buttonlike);
+                                    holder.like.setImageResource(R.drawable.v2_favorite_icon);
                                 }else {
                                     if (!favoritos.contains(ciudadNombre)) {
                                         favoritos.add(ciudadNombre);
-                                        holder.like.setImageResource(R.drawable.buttonlikered);
+                                        holder.like.setImageResource(R.drawable.v2_favorite_red_icon);
 
                                         db.collection("usuario").document(uid)
                                                 .update("favoritosCiudades", new java.util.ArrayList<>(favoritos))

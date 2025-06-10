@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 
@@ -16,13 +17,6 @@ public class Dialogos {
                 .setMessage(errorMessage)
                 .setPositiveButton("Aceptar", null)
                 .setCancelable(false)
-                .show();
-    }
-    public static void showErrorRegister(Context context, String errorMessage) {
-        new AlertDialog.Builder(context)
-                .setTitle("Error al registrarte")
-                .setMessage(errorMessage)
-                .setPositiveButton("Aceptar", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -39,15 +33,29 @@ public class Dialogos {
                     .setCancelable(false)
                     .create();
 
+            // Mostrar el diálogo primero
             progressDialog.show();
 
+            // Ajustar tamaño y fondo transparente
+            if (progressDialog.getWindow() != null) {
+                progressDialog.getWindow().setLayout(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                progressDialog.getWindow().setBackgroundDrawable(
+                        new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
+                );
+            }
+
+            // Cerrar automáticamente después de 5 segundos
             new Handler().postDelayed(() -> {
                 if (progressDialog.isShowing() && context instanceof Activity && !((Activity) context).isFinishing()) {
                     progressDialog.dismiss();
                 }
-            }, 5000);
+            }, 7000);
         }
     }
+
     public static void showErrorRegoverPass(Context context, String errorMessage) {
         new AlertDialog.Builder(context)
                 .setTitle("Recuperacion de Contraseña")

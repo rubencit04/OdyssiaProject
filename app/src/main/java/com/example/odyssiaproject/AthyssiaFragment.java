@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,7 +35,7 @@ public class AthyssiaFragment extends Fragment {
 
     private RecyclerView rwChat;
     private EditText etMensaje;
-    private FloatingActionButton btEnviarMensaje;
+    private ImageButton btEnviarMensaje;
     private AdaptadorChat adaptadorChat;
     private final String BOT_KEY = "bot";
     private final String USER_KEY = "user";

@@ -78,28 +78,46 @@ public class ConfigFragment extends Fragment {
         });
 
         btnLogOut.setOnClickListener(v -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("Cerrar sesión")
-                    .setMessage("¿Estás seguro que deseas cerrar sesión?")
-                    .setPositiveButton("Sí", (dialog, which) -> {
-                        // 1. Limpiar datos del usuario
-                        SharedPreferences prefs = requireActivity()
-                                .getSharedPreferences("user_data", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.clear();
-                        editor.apply();
+            // Inflar el layout personalizado
+            LayoutInflater inflater = LayoutInflater.from(requireContext());
+            View dialogView = inflater.inflate(R.layout.v2_dialog_close_session, null);
 
-                        // 2. Volver al LoginActivity
-                        Intent intent = new Intent(requireActivity(), LogIn.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+            // Construir el diálogo con el layout personalizado
+            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                    .setView(dialogView)
+                    .create();
 
-                        // 3. Mensaje de confirmación
-                        Toast.makeText(getContext(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
+            // Referencias a los botones del diálogo
+            Button btnAceptar = dialogView.findViewById(R.id.btnConfirmar);
+            Button btnCancelar = dialogView.findViewById(R.id.btnCancelar);
+
+            btnAceptar.setOnClickListener(view -> {
+                // 1. Limpiar datos del usuario
+                SharedPreferences prefs = requireActivity()
+                        .getSharedPreferences("user_data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.clear();
+                editor.apply();
+
+                // 2. Volver al LoginActivity
+                Intent intent = new Intent(requireActivity(), LogIn.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
+                // 3. Mensaje de confirmación
+                Toast.makeText(getContext(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
+
+                // Cerrar el diálogo
+                dialog.dismiss();
+            });
+
+            btnCancelar.setOnClickListener(view -> {
+                dialog.dismiss();
+            });
+
+            dialog.show();
         });
+
 
         btnEliminar.setOnClickListener(v -> {
             // 1) Creamos el AlertDialog con create(), sin mostrarlo todavía

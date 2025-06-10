@@ -30,8 +30,8 @@
 
             <TextView
                 android:id="@+id/tvNameCity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
@@ -42,9 +42,9 @@
 
             <ImageButton
                 android:id="@+id/buttonLikeCity"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/buttonlike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/v2_favorite_icon"
                 android:layout_gravity="center"
                 android:contentDescription="boton de like"/>
 

@@ -3,6 +3,7 @@ package com.example.odyssiaproject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -119,19 +120,23 @@ public class LogIn extends AppCompatActivity {
             gestorUsuario.iniciarSesion(usuarioLogin, new GestorUsuario.OnLoginListener() {
                 @Override
                 public void onSuccess(FirebaseUser user) {
-                    Dialogos.showLoading(LogIn.this, "Iniciando Sesion...");
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    String uid = user.getUid();
-                    db.collection("usuarios").document(uid).get().addOnSuccessListener(snapshot -> {
-                        if (snapshot.exists() && !snapshot.contains("favoritosCiudades")) {
-                            Map<String, Object> update = new HashMap<>();
-                            update.put("favoritosCiudades", new ArrayList<String>());
-                            db.collection("usuarios").document(uid).update(update);
-                        }
-                    });
+                    Dialogos.showLoading(LogIn.this, "Iniciando Sesión...");
 
-                    startActivity(new Intent(LogIn.this, MainActivity.class));
-                    finish();
+                    // Retarda el startActivity hasta que el diálogo esté visible
+                    new Handler().postDelayed(() -> {
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        String uid = user.getUid();
+                        db.collection("usuarios").document(uid).get().addOnSuccessListener(snapshot -> {
+                            if (snapshot.exists() && !snapshot.contains("favoritosCiudades")) {
+                                Map<String, Object> update = new HashMap<>();
+                                update.put("favoritosCiudades", new ArrayList<String>());
+                                db.collection("usuarios").document(uid).update(update);
+                            }
+                        });
+
+                        startActivity(new Intent(LogIn.this, MainActivity.class));
+                        finish();
+                    }, 1500); // Espera 1.5 segundos antes de ir a MainActivity
                 }
 
                 @Override

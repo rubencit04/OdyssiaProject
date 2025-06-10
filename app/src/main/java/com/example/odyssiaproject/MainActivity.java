@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d("NAVIGATION", "Cargando FavsFragment...");
                 loadFragment(new FavsFragment());
             } else if (item.getItemId() == R.id.miOdyssia) {
-                Log.d("NAVIGATION", "Cargando SwipeGoFragment...");
+                Log.d("NAVIGATION", "Cargando PasaporteFragment...");
                 loadFragment(new PasaporteFragment());
             } else if (item.getItemId() == R.id.ajustes) {
                 Log.d("NAVIGATION", "Cargando ConfigFragment...");

@@ -158,7 +158,7 @@ public class CityFragment extends Fragment {
 
                     if (nombreFiltro.equals(filtroActivo)) {
                         filtroActivo = null;
-                        textViewFiltro.setText("Filtrado: ninguno");
+                        textViewFiltro.setText("ninguno");
                         gestorCiudades.obtenerCiudadesPorPais(pais.getNombre(), new GestorCiudades.CallbackCiudades() {
                             @Override
                             public void onCiudadesCargados(List<Ciudad> lista) {
@@ -174,7 +174,7 @@ public class CityFragment extends Fragment {
                     }
 
                     filtroActivo = nombreFiltro;
-                    textViewFiltro.setText("Filtrado: " + nombreFiltro);
+                    textViewFiltro.setText(nombreFiltro);
 
                     if (id == R.id.sortA_Z) {
                         gestorCiudades.obtenerCiudadesOrdenadosAZ(pais.getNombre(), new GestorCiudades.CallbackCiudades() {

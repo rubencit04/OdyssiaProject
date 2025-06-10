@@ -36,22 +36,29 @@
         <!-- Sort Button (a la izquierda debajo del RecyclerView de promociones) -->
         <ImageButton
             android:id="@+id/btnSortBy"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/buttonsortby2"
-            android:contentDescription="sort by button" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="15dp"
+            android:background="@drawable/button_bluegradient"
+            android:src="@drawable/buttonsortby2"
+            android:contentDescription="boton filtrado"
+            app:fabCustomSize="54dp" />
 
         <TextView
             android:id="@+id/tvfiltro"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:fontFamily="@font/antic"
-            android:text="Filtrado: ninguno"
-            android:textColor="#5294FF"
+            android:paddingVertical="14dp"
+            android:paddingHorizontal="30dp"
+            android:text="ninguno"
+            android:background="@drawable/button_bluegradient"
+            android:textColor="#FFFFFF"
             android:textSize="22sp"
             android:textStyle="bold" />
 

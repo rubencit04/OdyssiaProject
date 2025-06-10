@@ -158,7 +158,7 @@ public class HomeFragment extends Fragment {
 
                 if (nombreFiltro.equals(filtroActivo)) {
                     filtroActivo = null;
-                    textViewFiltro.setText("Filtrado: ninguno");
+                    textViewFiltro.setText("ninguno");
 
                     gestorPaises.obtenerPaises(new GestorPaises.CallbackPaises() {
                         @Override
@@ -176,7 +176,7 @@ public class HomeFragment extends Fragment {
                 }
 
                 filtroActivo = nombreFiltro;
-                textViewFiltro.setText("Filtrado: " + nombreFiltro);
+                textViewFiltro.setText(nombreFiltro);
 
                 if (id == R.id.sortA_Z) {
                     gestorPaises.obtenerPaisesOrdenadosAZ(new GestorPaises.CallbackPaises() {
