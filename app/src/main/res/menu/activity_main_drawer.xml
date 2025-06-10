@@ -16,11 +16,6 @@
         </item>
 
         <item
-            android:id="@+id/swipeGo"
-            android:title="@string/v2_swipeGo">
-        </item>
-
-        <item
             android:id="@+id/miOdyssia"
             android:title="@string/v2_myOdyssia">
         </item>

@@ -129,16 +129,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // Determina qué fragmento cargar en función del ítem seleccionado.
             if (item.getItemId() == R.id.athyssia) {
                 Log.d("NAVIGATION", "Cargando AthyssiaFragment...");
-                loadFragment(new HomeFragment());
+                loadFragment(new AthyssiaFragment());
             } else if (item.getItemId() == R.id.favs) {
                 Log.d("NAVIGATION", "Cargando FavsFragment...");
                 loadFragment(new FavsFragment());
-            } else if (item.getItemId() == R.id.swipeGo) {
+            } else if (item.getItemId() == R.id.miOdyssia) {
                 Log.d("NAVIGATION", "Cargando SwipeGoFragment...");
                 loadFragment(new PasaporteFragment());
-            } else if (item.getItemId() == R.id.miOdyssia) {
-                Log.d("NAVIGATION", "Cargando MiOdyssiaFragment...");
-                loadFragment(new FavsFragment());
             } else if (item.getItemId() == R.id.ajustes) {
                 Log.d("NAVIGATION", "Cargando ConfigFragment...");
                 loadFragment(new ConfigFragment());
