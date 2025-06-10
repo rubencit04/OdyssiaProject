@@ -16,6 +16,7 @@ import com.example.odyssiaproject.R;
 import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.entidad.Pais;
 import com.example.odyssiaproject.negocio.GestorPaises;
+import com.example.odyssiaproject.persistencia.DaoPais;
 import com.example.odyssiaproject.ui.city.CityFragment;
 
 import java.util.List;
@@ -42,6 +43,11 @@ public class AdaptadorPaises extends RecyclerView.Adapter<AdaptadorPaises.ViewHo
     public AdaptadorPaises(List<PaisDTO> listaPaises) {
         this.listaPais = listaPaises;
         this.gestorPaises = new GestorPaises();
+    }
+    public void actualizarDatos(List<PaisDTO> nuevosPaises) {
+        listaPais.clear();
+        listaPais.addAll(nuevosPaises);
+        notifyDataSetChanged();
     }
 
     /**

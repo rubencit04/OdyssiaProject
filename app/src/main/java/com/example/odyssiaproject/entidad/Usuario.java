@@ -7,13 +7,11 @@ public class Usuario {
    private int id;
    private String usuario,nacionalidad, contrasenia, correo;
 
-   private List<Ciudad> favoritosCiudades;
-
-   private List<Actividad> favoritosActividades;
+   private List<String> favoritosCiudades;
 
    private Boolean tema;
 
-   public Usuario(int id, Boolean tema, String usuario, String nacionalidad, String contrasenia, String correo, List<Ciudad> favoritosCiudades, List<Actividad> favoritosActividades) {
+   public Usuario(int id, Boolean tema, String usuario, String nacionalidad, String contrasenia, String correo, List<String> favoritosCiudades, List<Actividad> favoritosActividades) {
       this.id = id;
       this.tema = tema;
       this.usuario = usuario;
@@ -21,7 +19,6 @@ public class Usuario {
       this.contrasenia = contrasenia;
       this.correo = correo;
       this.favoritosCiudades = favoritosCiudades;
-      this.favoritosActividades = favoritosActividades;
    }
 
    public Usuario(String correo, String contrasenia) {
@@ -74,20 +71,12 @@ public class Usuario {
       this.nacionalidad = nacionalidad;
    }
 
-   public List<Ciudad> getFavoritosCiudades() {
+   public List<String> getFavoritosCiudades() {
       return favoritosCiudades;
    }
 
-   public void setFavoritosCiudades(List<Ciudad> favoritosCiudades) {
+   public void setFavoritosCiudades(List<String> favoritosCiudades) {
       this.favoritosCiudades = favoritosCiudades;
-   }
-
-   public List<Actividad> getFavoritosActividades() {
-      return favoritosActividades;
-   }
-
-   public void setFavoritosActividades(List<Actividad> favoritosActividades) {
-      this.favoritosActividades = favoritosActividades;
    }
 
    public Boolean getTema() {
@@ -107,7 +96,6 @@ public class Usuario {
               ", contrasenia='" + contrasenia + '\'' +
               ", correo='" + correo + '\'' +
               ", favoritosCiudades=" + favoritosCiudades +
-              ", favoritosActividades=" + favoritosActividades +
               ", tema=" + tema +
               '}';
    }

@@ -52,7 +52,8 @@ public class Pais {
     public Pais() {
     }
 
-    public List<Promociones> getListaPromociones() {
+    public List<Promociones
+            > getListaPromociones() {
         return listaPromociones;
     }
 

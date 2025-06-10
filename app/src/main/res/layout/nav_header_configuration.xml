@@ -13,24 +13,6 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/iwCerrar"
-        android:layout_width="70dp"
-        android:layout_height="75dp"
-        android:contentDescription="boton para cerrar el menu"
-        android:src="@drawable/btn_cerrar_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iwFondo"
-        android:layout_width="70dp"
-        android:layout_height="75dp"
-        android:contentDescription="boton para cerrar el menu"
-        android:src="@drawable/btn_edit_background"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
         android:id="@+id/iwUsuario"
         android:layout_width="90dp"
         android:layout_height="95dp"
@@ -39,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@mipmap/photoinsert" />
+        android:src="@drawable/v2_fotoprofile" />
 
     <TextView
         android:id="@+id/twUsuario"

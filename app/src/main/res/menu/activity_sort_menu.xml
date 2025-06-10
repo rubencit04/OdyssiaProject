@@ -2,11 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/sortA_Z"
-        android:title="Ordenar de A-Z"/>
+        android:title="A-Z"/>
     <item
-        android:id="@+id/sortZ_A"
-        android:title="Ordenar de Z-A"/>
+        android:id="@+id/sortCoste_Vida"
+        android:title="Coste de Vida"/>
     <item
         android:id="@+id/sortPopularidad"
-        android:title="Ordenar por Popularidad"/>
+        android:title="Popularidad"/>
+
 </menu>

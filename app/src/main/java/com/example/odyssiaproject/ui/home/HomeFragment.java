@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,9 +21,8 @@ import com.example.odyssiaproject.adaptador.AdaptadorPaises;
 import com.example.odyssiaproject.adaptador.AdaptadorPromociones;
 import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.entidad.Promociones;
+import com.example.odyssiaproject.negocio.GestorPaises;
 import com.example.odyssiaproject.negocio.GestorPromociones;
-import com.example.odyssiaproject.persistencia.api.ApiRenderService;
-import com.example.odyssiaproject.persistencia.api.RetrofitRenderClient;
 import com.example.odyssiaproject.runabble.PromocionesAutoScroller;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,11 +30,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 /**
  * HomeFragment es el fragmento principal de la pantalla de inicio.
  * Muestra promociones y países en RecyclerViews.
@@ -52,15 +48,20 @@ public class HomeFragment extends Fragment {
     private static final long RETRASO_PASO_SCROLL_MS_BASICO = 50;
 
     private LinearLayoutManager promocionesLayoutManager;
-    private ApiRenderService apiRenderService;
 
     private GestorPromociones gestorPromociones = new GestorPromociones();
+     private GestorPaises gestorPaises = new GestorPaises();
+     private ImageButton btnFiltro;
+    private String filtroActivo = null;
+    private TextView textViewFiltro;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+        btnFiltro = root.findViewById(R.id.btnSortBy);
+        TextView textViewFiltro = root.findViewById(R.id.tvfiltro);
 
         // Configurar header Navigation Drawer con email usuario Firebase
         DrawerLayout drawerLayout = getActivity().findViewById(R.id.navBarDrawer);
@@ -133,25 +134,95 @@ public class HomeFragment extends Fragment {
         recyclerViewPaises.setHasFixedSize(true);
 
         // Cargar países desde API directamente (puedes también hacer un gestor si quieres)
-        apiRenderService = RetrofitRenderClient.getApiService();
-        apiRenderService.getPaises().enqueue(new Callback<List<PaisDTO>>() {
+
+
+        gestorPaises.obtenerPaises(new GestorPaises.CallbackPaises() {
             @Override
-            public void onResponse(Call<List<PaisDTO>> call, Response<List<PaisDTO>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    listaPaises = response.body();
-                    adaptadorPaises = new AdaptadorPaises(listaPaises);
-                    recyclerViewPaises.setAdapter(adaptadorPaises);
-                } else {
-                    Log.e("HomeFragment", "Error en la respuesta al obtener países");
-                }
+            public void onPaisesCargados(List<PaisDTO> listaPaises) {
+                adaptadorPaises = new AdaptadorPaises(listaPaises);
+                recyclerViewPaises.setAdapter(adaptadorPaises);
             }
 
             @Override
-            public void onFailure(Call<List<PaisDTO>> call, Throwable t) {
-                Log.e("HomeFragment", "Fallo al obtener países", t);
+            public void onError(Throwable t) {
+                Log.e("HomeFragment", "Error al cargar países", t);
             }
         });
+        btnFiltro.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+            popupMenu.getMenuInflater().inflate(R.menu.activity_sort_menu, popupMenu.getMenu());
 
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                String nombreFiltro = item.getTitle().toString();
+
+                if (nombreFiltro.equals(filtroActivo)) {
+                    filtroActivo = null;
+                    textViewFiltro.setText("Filtrado: ninguno");
+
+                    gestorPaises.obtenerPaises(new GestorPaises.CallbackPaises() {
+                        @Override
+                        public void onPaisesCargados(List<PaisDTO> lista) {
+                            adaptadorPaises.actualizarDatos(lista);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            Log.e("HomeFragment", "Error al quitar filtro", t);
+                        }
+                    });
+
+                    return true;
+                }
+
+                filtroActivo = nombreFiltro;
+                textViewFiltro.setText("Filtrado: " + nombreFiltro);
+
+                if (id == R.id.sortA_Z) {
+                    gestorPaises.obtenerPaisesOrdenadosAZ(new GestorPaises.CallbackPaises() {
+                        @Override
+                        public void onPaisesCargados(List<PaisDTO> lista) {
+                            adaptadorPaises.actualizarDatos(lista);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            Log.e("HomeFragment", "Error al ordenar A-Z", t);
+                        }
+                    });
+
+                } else if (id == R.id.sortCoste_Vida) {
+                    gestorPaises.obtenerPaisesOrdenadosPorCosteVida(new GestorPaises.CallbackPaises() {
+                        @Override
+                        public void onPaisesCargados(List<PaisDTO> lista) {
+                            adaptadorPaises.actualizarDatos(lista);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            Log.e("HomeFragment", "Error al ordenar por coste de vida", t);
+                        }
+                    });
+
+                } else if (id == R.id.sortPopularidad) {
+                    gestorPaises.obtenerPaisesOrdenadosPorPopularidad(new GestorPaises.CallbackPaises() {
+                        @Override
+                        public void onPaisesCargados(List<PaisDTO> lista) {
+                            adaptadorPaises.actualizarDatos(lista);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            Log.e("HomeFragment", "Error al ordenar por popularidad", t);
+                        }
+                    });
+                }
+
+                return true;
+            });
+
+            popupMenu.show();
+        });
         return root;
     }
 

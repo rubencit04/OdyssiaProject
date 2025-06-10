@@ -32,14 +32,14 @@ public class ExplorationFragment extends Fragment {
 
     private static final String ARG_CIUDAD = "ciudad";
     private static final String ARG_PAIS = "pais";
-    Pais pais;
-    private List<Actividad> listaActividades = new ArrayList<>();
+
+    private String nombrePais;
+    private String nombreCiudad;
 
     private AdaptadorExploracion adaptadorExploracion;
     private AdaptadorPromociones adaptadorPromociones;
 
     private GestorPromociones gestorPromociones;
-
     private PromocionesAutoScroller controladorScrollPromociones;
 
     private static final int VELOCIDAD_SCROLL_PX_BASICO = 10;
@@ -60,13 +60,14 @@ public class ExplorationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            String nombrePais = getArguments().getString(ARG_PAIS);
-            String nombreCiudad = getArguments().getString(ARG_CIUDAD);
-            Log.d("ExplorationFragment", "Argumentos recibidos -> País: " + nombrePais + ", Ciudad: " + nombreCiudad);
-        }
+
         gestorPromociones = new GestorPromociones();
 
+        if (getArguments() != null) {
+            nombrePais = getArguments().getString(ARG_PAIS);
+            nombreCiudad = getArguments().getString(ARG_CIUDAD);
+            Log.d("ExplorationFragment", "Argumentos recibidos -> País: " + nombrePais + ", Ciudad: " + nombreCiudad);
+        }
     }
 
     @Nullable
@@ -76,133 +77,88 @@ public class ExplorationFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_exploration, container, false);
 
         rwExploration = root.findViewById(R.id.rwExploration);
+        recyclerViewPromociones = root.findViewById(R.id.rwPromotions);
+
+
+        recyclerViewPromociones.setHasFixedSize(true);
+        LinearLayoutManager promocionesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
+        controladorScrollPromociones = new PromocionesAutoScroller(
+                recyclerViewPromociones, VELOCIDAD_SCROLL_PX_BASICO, RETRASO_PASO_SCROLL_MS_BASICO);
+
+        adaptadorPromociones = new AdaptadorPromociones(new ArrayList<>(), controladorScrollPromociones);
+        recyclerViewPromociones.setAdapter(adaptadorPromociones);
+
         rwExploration.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rwExploration.setHasFixedSize(true);
 
-        recyclerViewPromociones = root.findViewById(R.id.rwPromotions);
-        recyclerViewPromociones.setHasFixedSize(true);
-        LinearLayoutManager promocionesLayoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewPromociones.setLayoutManager(promocionesLayoutManager);
-
-
-        controladorScrollPromociones = new PromocionesAutoScroller(
-                recyclerViewPromociones,
-                VELOCIDAD_SCROLL_PX_BASICO,
-                RETRASO_PASO_SCROLL_MS_BASICO
+        List<Integer> imagenesDrawable = List.of(
+                R.drawable.v2_ocionocturnocard, R.drawable.v2_actividadescard,
+                R.drawable.v2_restaurantescard, R.drawable.v2_culturacard,
+                R.drawable.v2_alojamientoscard, R.drawable.v2_monumentoscard
         );
-
-        controladorScrollPromociones.iniciarScroll();
-
-        adaptadorPromociones = new AdaptadorPromociones(
-                new ArrayList<>(),
-                controladorScrollPromociones
+        List<Integer> nombresStringId = List.of(
+                R.string.titulo_ocio_nocturno, R.string.titulo_ocio, R.string.titulo_restaurantes,
+                R.string.titulo_cultura, R.string.titulo_vuelos, R.string.titulo_monumentos
         );
-        recyclerViewPromociones.setAdapter(adaptadorPromociones);
+        adaptadorExploracion = new AdaptadorExploracion(new ArrayList<>(), imagenesDrawable, nombresStringId, nombrePais);
+        rwExploration.setAdapter(adaptadorExploracion);
+
+
+        if (nombrePais != null && nombreCiudad != null) {
+            gestorPromociones.obtenerPromocionesPorPais(nombrePais, new GestorPromociones.CallbackPromociones() {
+                @Override
+                public void onPromocionesCargadas(List<Promociones> promociones) {
+                    if (adaptadorPromociones != null && promociones != null) {
+                        adaptadorPromociones.actualizarDatos(promociones);
+                        if (!promociones.isEmpty() && controladorScrollPromociones != null) {
+                            controladorScrollPromociones.iniciarScroll();
+                        }
+                    }
+                }
+                @Override
+                public void onError(Throwable t) {
+                    Log.e("ExplorationFragment", "Error cargando promociones por país", t);
+                }
+            });
+
+            Ciudad ciudad = new Ciudad();
+            ciudad.setNombre(nombreCiudad);
+            List<Actividad> listaActividades = cargarActividadLocal(ciudad);
+            if (adaptadorExploracion != null) {
+                adaptadorExploracion.actualizarDatos(listaActividades);
+            }
+
+        } else {
+            Log.e("ExplorationFragment", "Argumentos 'pais' o 'ciudad' son nulos. No se pueden cargar datos.");
+        }
+
 
         recyclerViewPromociones.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
                 super.onScrollStateChanged(rv, newState);
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    controladorScrollPromociones.detenerScroll();
+                    if (controladorScrollPromociones != null) controladorScrollPromociones.detenerScroll();
                 } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    controladorScrollPromociones.reanudarScrollConRetraso(700);
+                    if (controladorScrollPromociones != null) controladorScrollPromociones.reanudarScrollConRetraso(700);
                 }
             }
         });
-
-        recyclerViewPromociones.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    // El usuario está desplazando manualmente: detenemos el scroll automático
-                    controladorScrollPromociones.detenerScroll();
-                }
-            }
-        });
-
-        if (getArguments() != null) {
-            String nombrePais = getArguments().getString("pais");
-            String nombreCiudad = getArguments().getString("ciudad");
-
-            if (nombrePais != null && !nombrePais.isEmpty()) {
-                pais = new Pais();
-                pais.setNombre(nombrePais);
-
-                Ciudad ciudad = new Ciudad();
-                ciudad.setNombre(nombreCiudad);
-
-                Log.d("ExplorationFragment", "País inicializado: " + pais.getNombre());
-
-                // Cambiar la carga de promociones para usar el gestor:
-                gestorPromociones.obtenerPromocionesPorPais(pais.getNombre(), new GestorPromociones.CallbackPromociones() {
-                    @Override
-                    public void onPromocionesCargadas(List<Promociones> promociones) {
-                        if (promociones != null && !promociones.isEmpty()) {
-                            adaptadorPromociones.actualizarDatos(promociones);
-
-                        } else {
-                            Log.w("ExplorationFragment", "Lista de promociones está vacía o nula. No se inicia scroll.");
-                            adaptadorPromociones.actualizarDatos(new ArrayList<>());
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        Log.e("ExplorationFragment", "Error cargando promociones por país", t);
-                        adaptadorPromociones.actualizarDatos(new ArrayList<>());
-                    }
-                });
-
-                listaActividades = cargarActividadLocal(ciudad); // ciudad incluida
-
-                List<Integer> imagenesDrawable = List.of(
-                        R.drawable.v2_ocionocturnocard,
-                        R.drawable.v2_actividadescard,
-                        R.drawable.v2_restaurantescard,
-                        R.drawable.v2_culturacard,
-                        R.drawable.v2_alojamientoscard,
-                        R.drawable.v2_monumentoscard
-                );
-
-                List<Integer> nombresStringId = List.of(
-                        R.string.titulo_ocio_nocturno,
-                        R.string.titulo_ocio,
-                        R.string.titulo_restaurantes,
-                        R.string.titulo_cultura,
-                        R.string.titulo_vuelos,
-                        R.string.titulo_monumentos
-                );
-
-                adaptadorExploracion = new AdaptadorExploracion(listaActividades, imagenesDrawable, nombresStringId, pais.getNombre());
-                rwExploration.setAdapter(adaptadorExploracion);
-
-            } else {
-                Log.e("ExplorationFragment", "El argumento 'pais' es null o vacío");
-            }
-        } else {
-            Log.e("ExplorationFragment", "No se recibieron argumentos");
-        }
 
         return root;
-
     }
 
     private List<Actividad> cargarActividadLocal(Ciudad ciudad) {
         List<Actividad> actividades = new ArrayList<>();
         String[] nombres = {"Ocio Nocturno", "Ocio Diurno", "Restaurantes", "Cultura", "Alojamientos", "Monumentos"};
-
         for (String nombre : nombres) {
             Actividad actividad = new Actividad(nombre);
             actividad.setCiudad(ciudad);
             actividades.add(actividad);
         }
-
         return actividades;
     }
-
 
     @Override
     public void onDestroyView() {
@@ -210,11 +166,9 @@ public class ExplorationFragment extends Fragment {
         if (controladorScrollPromociones != null) {
             controladorScrollPromociones.detenerScroll();
         }
-
         recyclerViewPromociones = null;
         adaptadorPromociones = null;
         controladorScrollPromociones = null;
-
         rwExploration = null;
         adaptadorExploracion = null;
     }

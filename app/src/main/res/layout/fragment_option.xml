@@ -24,18 +24,38 @@
         tools:listitem="@layout/item_promotions" />
 
     <!-- Sort Button -->
-    <ImageButton
-        android:id="@+id/btnSortBy"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/buttonsortby2"
-        android:contentDescription="sort by button"
-        app:layout_constraintTop_toBottomOf="@id/rwPromotions"
-        app:layout_constraintStart_toStartOf="parent"
+    <LinearLayout
+        android:id="@+id/filtro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/rwOptions"
-        android:layout_marginStart="4dp"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rwPromotions">
+
+
+        <!-- Sort Button (a la izquierda debajo del RecyclerView de promociones) -->
+        <ImageButton
+            android:id="@+id/btnSortBy"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/buttonsortby2"
+            android:contentDescription="sort by button" />
+
+        <TextView
+            android:id="@+id/tvfiltro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/antic"
+            android:text="Filtrado: ninguno"
+            android:textColor="#5294FF"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <!-- RecyclerView Opciones (vertical) -->
     <androidx.recyclerview.widget.RecyclerView
@@ -43,11 +63,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/btnSortBy"
+        app:layout_constraintTop_toBottomOf="@id/filtro"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="12dp"
-        tools:listitem="@layout/item_options" />
+        tools:listitem="@layout/item_options"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.example.odyssiaproject.persistencia.api;
 
 
 import com.example.odyssiaproject.dto.ActividadDTO;
+import com.example.odyssiaproject.dto.CiudadDTO;
 import com.example.odyssiaproject.dto.PaisDTO;
 import com.example.odyssiaproject.dto.VueloDTO;
 
@@ -23,7 +24,7 @@ public interface ApiRenderService {
     Call<List<PaisDTO>> getPaises();
 
     @GET("/ciudades")
-    Call<List<Ciudad>> getCiudades(@Query("pais") String pais);
+    Call<List<Ciudad>> getCiudades(@Query("pais") String pais, @Query("ciudad") String ciudad);
 
     @GET("/promociones")
     Call<List<Promociones>> getPromociones(@Query("pais") String pais);
